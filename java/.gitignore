@@ -1,0 +1,6 @@
+#
+# Standard Java .gitignore
+#
+*.class
+*.jar
+*.war
