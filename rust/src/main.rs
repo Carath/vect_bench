@@ -27,6 +27,7 @@ fn bench<T>(n: u64, create_t: fn(u64) -> T, hash_t: fn(&T) -> u64) -> u64 {
 		vec.push(create_t(i));
 	}
 
+	// let checksum : u64 = vec.iter().map(|x| hash_t(x)).sum();
 	let mut checksum : u64 = 0;
 	for x in &vec {
 		checksum += hash_t(x);

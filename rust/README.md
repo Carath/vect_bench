@@ -55,7 +55,20 @@ Finally, to remove the generated ``` target/ ``` directory use:
 ``` cargo clean ```
 
 
+## Compiling without cargo
+
+Below are commands to compile a source file with ``` rustc ```, while using optimization flags:
+
+```
+rustc -O src/main.rs
+rustc -C debuginfo=0 -C opt-level=3 src/main.rs
+rustc -C debuginfo=0 -C opt-level=3 --emit asm src/main.rs
+```
+
+
 ## Expert stuff
+
+### Dynamic builds
 
 By default rust programs are compiled by cargo statically, therefore parts of the std lib will be included in the executable, resulting in (somewhat) large files (a few MB). To prevent this, one can compile dynamically and specify the path of the shared lib (here ``` libstd-2a15b3cd0948397b.so ```):
 
@@ -76,49 +89,18 @@ RUSTFLAGS="-C prefer-dynamic -C link-arg=-Wl,-rpath=/home/mypc/.rustup/toolchain
 Note that absolute paths are needed.
 
 
+### Assembly output
 
+To generate assembly along with the target, append the ``` --emit asm ``` flag while compiling like below (here in release mode):
 
------------
-
-https://medium.com/journey-to-rust/viewing-assembly-for-rust-function-d4870baad941
-https://stackoverflow.com/questions/39219961/how-to-get-assembly-output-from-building-with-cargo
-https://github.com/Manishearth/rust-clippy
-
------------
-
-use rustc alone?
-
-Compile a source file with some optimization on:
-
-
-
-rustc -O src/main.rs
-rustc -C debuginfo=0 -C opt-level=3 src/main.rs
-rustc -C debuginfo=0 -C opt-level=3 --emit asm src/main.rs
-
------------
-
-Faster !!!??? Only with Cargo, emitting asm only with rustc does not change the executable.
-
-Yield an executable of 384 bytes (resp. 344) less than before with static (resp. dynamic) build.
-
+```sh
 cargo rustc --release -- --emit asm
+```
 
+Or also with the following command, having the same effect:
+
+```sh
 RUSTFLAGS="--emit asm" cargo build --release
+```
 
-RUSTFLAGS="--emit asm -C prefer-dynamic -C link-arg=-Wl,-rpath=/home/mypc/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib" \
-  cargo build --release
-
------------
-
-cargo install cargo-asm
-
-cargo asm --asm-style=intel test::main
-
-If the "bench" is not inlined (e.g using ``` #[inline(never)] ```) then the assembly of its monomorphized versions may be seen with:
-
-cargo asm --asm-style=intel test::bench
-
-But does this uses the release mode? Doesn't seem so...
-
------------
+Note that emitting assembly actually changes the generated target. Here, it somewhat yields a 16% speed gain! Also, this definitely is a cargo thing, since emitting assembly only using rustc does not change the target. Finally, the ``` --emit asm ``` flag can be used with the two commands above for dynamic builds, with the same speed gain as in the static builds.
