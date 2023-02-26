@@ -8,6 +8,10 @@ type PQnode struct {
 }
 
 func main() {
+	thebenchmark();
+}
+
+func thebenchmark() {
 	// n := 10
 	n := 100000000
 

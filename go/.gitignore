@@ -1,1 +1,3 @@
-test
+# Note: .prof files are being commited despite being unreadable, since they may be used for PGO.
+*.test
+bench
