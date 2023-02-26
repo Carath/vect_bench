@@ -6,22 +6,30 @@ The benchmark simply consist of creating vectors for some simple data types, add
 
 Full benchmark results (char, int and 16 bytes struct vectors):
 
-- Rust (releast + asm):  1.346 s
-- Rust (release):        1.601 s
-- C:                     2.016 s
-- cpp:                   2.960 s
-- go:                    3.549 s
-- Nim (GC: arc):         7.077 s
-- v (prod):              7.630 s
-- Nim (GC: default):     9.845 s
-- v:                     20.20 s
-- Java:                  Crash with "java.lang.OutOfMemoryError: GC overhead limit exceeded" after 9m37,881s
-- Python:                Crash after 2m38,689s
+- Rust (release + asm):     1.346 s
+- Rust (release):           1.601 s
+- C:                        2.016 s
+- cpp:                      2.960 s
+- go:                       3.489 s
+- Ada:                      4.076 s
+- Nim (GC: arc):            7.077 s
+- v (prod):                 7.630 s
+- Nim (GC: default):        9.845 s
+- v:                        20.20 s
+- javascript (node v12):    Crash in 1m 57.226 s with "JavaScript heap out of memory"
+- javascript (node v18):    Crash in 53.480 s with "JavaScript heap out of memory"
+- javascript (browser):     Crash in 29.926 s with "out of memory"
+- Java:                     Crash in 9m 37.881 s with "java.lang.OutOfMemoryError: GC overhead limit exceeded"
+- Python:                   Crash in 2m 38.689 s
 
 Partial benchmark results (only char and int vectors):
 
-- Java:                  36.450 s w/o genericity, 55.256 s with.
-- Python:                1m14,738s
+- javascript (node v12):    6.649 s
+- javascript (node v18):    7.484 s
+- javascript (browser):     12.861 s
+- Java 8 (w/o genericity):  36.450 s
+- Java 8 (w/ genericity):   55.256 s
+- Python 3:                 1m 14.738 s
 
 
 Note: be mindful not to include the compile time of the tested targets (e.g for rust use ``` cargo build ``` instead of ``` cargo run ``` and so on).
@@ -29,5 +37,12 @@ Note: be mindful not to include the compile time of the tested targets (e.g for 
 
 TODO:
 
+- cleanup the C version code
 - C version: does not compile without the -O2 flag !!!
+- C version: inline EQ fun?
 - uniformisation of types? int -> T, T -> uint64 ?
+- more details here on the benchmark goals, and the choice of data structure (random access).
+- java lambda functions? https://www.w3schools.com/java/java_lambda.asp
+- cleanup ada README, and source files
+- ada generics: keep that
+- talk about Linux 'time' for measuring...

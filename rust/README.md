@@ -3,9 +3,11 @@
 
 ## Useful links:
 
+- https://www.rust-lang.org/learn/get-started
 - https://doc.rust-lang.org/std/index.html
 - https://doc.rust-lang.org/reference/introduction.html
-- https://www.rust-lang.org/learn/get-started
+- https://doc.rust-lang.org/book/title-page.html
+- https://doc.rust-lang.org/1.9.0/book/README.html
 
 
 ## Installation

@@ -5,7 +5,7 @@
 
 Follow the link instructions: https://go.dev/doc/install
 
-To check the installed version here ``` go1.20 ```, simply run: ``` go version ```
+To check the installed version (here ``` go1.20 ```) simply run: ``` go version ```
 
 
 ## Documentation
