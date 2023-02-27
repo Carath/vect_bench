@@ -1,13 +1,13 @@
 # Rust basics
 
 
-## Useful links:
+## Useful links
 
-- https://www.rust-lang.org/learn/get-started
-- https://doc.rust-lang.org/std/index.html
-- https://doc.rust-lang.org/reference/introduction.html
-- https://doc.rust-lang.org/book/title-page.html
-- https://doc.rust-lang.org/1.9.0/book/README.html
+- <https://www.rust-lang.org/learn/get-started>
+- <https://doc.rust-lang.org/std/index.html>
+- <https://doc.rust-lang.org/reference/introduction.html>
+- <https://doc.rust-lang.org/book/title-page.html>
+- <https://doc.rust-lang.org/1.9.0/book/README.html>
 
 
 ## Installation
@@ -18,7 +18,7 @@ For Linux (Ubuntu) run the following:
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-To check the installed versions:
+To check the installed versions (here 1.67.0):
 
 ```sh
 rustc --version
@@ -52,16 +52,14 @@ Note that executables will be created in ``` target/release/ ```. Also, by defau
 To run an unoptimized project use ``` cargo run ```, and ``` cargo run --release ``` for the optimized version.
 Note that the ``` cargo run ``` command will build the project if needed, making the ``` cargo build ``` step unnecessary.
 
-Finally, to remove the generated ``` target/ ``` directory use:
-
-``` cargo clean ```
+Finally, to remove the generated ``` target/ ``` directory use: ``` cargo clean ```
 
 
 ## Compiling without cargo
 
 Below are commands to compile a source file with ``` rustc ```, while using optimization flags:
 
-```
+```sh
 rustc -O src/main.rs
 rustc -C debuginfo=0 -C opt-level=3 src/main.rs
 rustc -C debuginfo=0 -C opt-level=3 --emit asm src/main.rs
@@ -72,7 +70,7 @@ rustc -C debuginfo=0 -C opt-level=3 --emit asm src/main.rs
 
 ### Dynamic builds
 
-By default rust programs are compiled by cargo statically, therefore parts of the std lib will be included in the executable, resulting in (somewhat) large files (a few MB). To prevent this, one can compile dynamically and specify the path of the shared lib (here ``` libstd-2a15b3cd0948397b.so ```):
+By default rust programs are compiled by cargo statically, therefore parts of the standard library will be included in the executable, resulting in (somewhat) large files (a few MB). To prevent this, one can compile dynamically and specify the path of the shared lib (here ``` libstd-2a15b3cd0948397b.so ```):
 
 Method 1:
 
@@ -105,4 +103,4 @@ Or also with the following command, having the same effect:
 RUSTFLAGS="--emit asm" cargo build --release
 ```
 
-Note that emitting assembly actually changes the generated target. Here, it somewhat yields a 16% speed gain! Also, this definitely is a cargo thing, since emitting assembly only using rustc does not change the target. Finally, the ``` --emit asm ``` flag can be used with the two commands above for dynamic builds, with the same speed gain as in the static builds.
+Note that emitting assembly actually changes the generated target. Here, it somewhat yields a 16% speed gain! Also, this definitely is a cargo thing, since emitting assembly only using rustc does not change the target. Finally, the ``` --emit asm ``` flag can be used with the two commands above for dynamic builds (here with the same speed gain as in the static builds).

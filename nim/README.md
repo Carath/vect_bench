@@ -1,15 +1,15 @@
 # Nim basics
 
 
-## Useful links:
+## Useful links
 
-- https://nim-by-example.github.io/getting_started/
-- https://nim-lang.org/docs/tut1.html
-- https://nim-lang.org/docs/manual.html
-- https://nim-lang.org/docs/nimc.html
-- https://nim-by-example.github.io
-- https://nim-lang.org/1.4.0/gc.html
-- https://narimiran.github.io/nim-basics/
+- <https://nim-by-example.github.io/getting_started/>
+- <https://nim-lang.org/docs/tut1.html>
+- <https://nim-lang.org/docs/manual.html>
+- <https://nim-lang.org/docs/nimc.html>
+- <https://nim-by-example.github.io>
+- <https://nim-lang.org/1.4.0/gc.html>
+- <https://narimiran.github.io/nim-basics/>
 
 
 ## Installation
@@ -46,7 +46,7 @@ To compile a .nim file (here ``` test.nim ```), use the following:
 nim c test.nim
 ```
 
-To enable the optimizations, compile with the following (-d:release should be better than -opt:speed):
+To enable the optimizations, compile with the following (``` -d:release ``` should be better than ``` -opt:speed ```):
 
 ```sh
 nim c -d:release test.nim

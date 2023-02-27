@@ -1,4 +1,4 @@
-# Basic of v (vlang)
+# Basics of v (vlang)
 
 
 ## Installing
@@ -16,8 +16,8 @@ Current version: ``` V 0.3.3 b6ecd63 ```
 
 ## Documentation
 
-- https://github.com/vlang/v/blob/master/doc/docs.md
-- https://modules.vlang.io/
+- <https://github.com/vlang/v/blob/master/doc/docs.md>
+- <https://modules.vlang.io/>
 
 
 ## Building and running code
