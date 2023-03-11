@@ -18,7 +18,7 @@ For Linux (Ubuntu) run the following:
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-To check the installed versions (here 1.67.0):
+To check the installed versions (here ``` 1.67.0 ```):
 
 ```sh
 rustc --version
@@ -39,15 +39,21 @@ rustup docs --book
 
 Creating a project:
 
-``` cargo new rust ```
+```sh
+cargo new rust
+```
 
 Building the project:
 
-``` cargo build ```
+```sh
+cargo build
+```
 
 Note that executables will be created in ``` target/release/ ```. Also, by default the code isn't optimized. To change that, use instead:
 
-``` cargo build --release ```
+```sh
+cargo build --release
+```
 
 To run an unoptimized project use ``` cargo run ```, and ``` cargo run --release ``` for the optimized version.
 Note that the ``` cargo run ``` command will build the project if needed, making the ``` cargo build ``` step unnecessary.

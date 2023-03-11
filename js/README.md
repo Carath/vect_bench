@@ -10,6 +10,7 @@ Two environment are tested: a web browser and [node.js](https://nodejs.org/en/).
 The more convenient way is to install [nvm](https://github.com/nvm-sh/nvm), follow the website instructions.
 
 To install a specific version of node (e.g ``` v12.22.12 ```) run ``` nvm install v12.22.12 ```.
+
 To switch to another installed version run ``` nvm use v18.14.2 ```.
 
 

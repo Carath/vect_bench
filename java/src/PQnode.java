@@ -7,9 +7,4 @@ public class PQnode
 		this.key = key;
 		this.item = item;
 	}
-
-	public static void main(String[] args) {
-		PQnode node = new PQnode(1., 2);
-		System.out.printf("%f, %d\n", node.key, node.item);
-	}
 }

@@ -1,10 +1,7 @@
-type KeyType = f64;
-type ItemType = u64;
-
 // #[repr(C, packed(4))]
 struct PQnode {
-	key: KeyType,
-	item: ItemType
+	key: f64,
+	item: u64
 }
 
 fn main() {

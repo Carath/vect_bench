@@ -1,4 +1,3 @@
 *.o
 *.ali
-benchmark
 benchmark_inst
