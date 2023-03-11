@@ -34,7 +34,7 @@ public class BenchLambda
 
 	public static <T> long bench(int n, CreateT<T> c, HashT<T> h)
 	{
-		System.out.printf("Bench with %d samples...\n", n);
+		System.out.printf("\nBench with %d samples...\n", n);
 
 		ArrayList<T> vect = new ArrayList<T>();
 
@@ -42,17 +42,20 @@ public class BenchLambda
 			vect.add(c.create(i));
 		}
 
+		System.out.printf("Length: %d\n", vect.size());
+		double totalMemory = Runtime.getRuntime().totalMemory() / (double) (1 << 30);
+		System.out.printf("Total memory: %.3f GB\n", totalMemory);
+
 		long checksum = 0;
 		for (T x : vect) {
 			checksum += h.hash(x);
 		}
-		System.out.printf("checksum: %d\n", checksum);
+		System.out.printf("Checksum: %d\n", checksum);
 
 		while (!vect.isEmpty()) {
 			vect.remove(vect.size()-1);
 		}
 
-		System.out.printf("Length: %d\n\n", vect.size());
 		vect = null;
 		System.gc();
 		return checksum;

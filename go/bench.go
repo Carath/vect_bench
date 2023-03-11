@@ -1,6 +1,7 @@
 package main
 
 import "fmt"
+import "runtime"
 
 type PQnode struct {
 	key float64
@@ -22,7 +23,7 @@ func thebenchmark() {
 }
 
 func bench[T any](n int, create_t func(int) T, hash_t func(T) uint64) uint64 {
-	fmt.Printf("Bench with %d samples...\n", n)
+	fmt.Printf("\nBench with %d samples...\n", n)
 
 	vec := []T{}
 
@@ -30,16 +31,20 @@ func bench[T any](n int, create_t func(int) T, hash_t func(T) uint64) uint64 {
 		vec = append(vec, create_t(i))
 	}
 
+	fmt.Printf("Length: %d\n", len(vec))
+	var m runtime.MemStats
+	runtime.ReadMemStats(&m)
+	fmt.Printf("Memory: %.3f GB\n", float32(m.Alloc) / (1 << 30))
+
 	checksum := uint64(0)
 	for _, x := range vec {
 		checksum += hash_t(x)
 	}
-	fmt.Printf("checksum: %d\n", checksum)
+	fmt.Printf("Checksum: %d\n", checksum)
 
 	for len(vec) > 0 {
 		vec = vec[:len(vec)-1]
 	}
 
-	fmt.Printf("Length: %d\n\n", len(vec))
 	return checksum
 }

@@ -17,23 +17,25 @@ procedure BenchmarkProc (n : Integer; createT : createFunType; hashT : hashFunTy
 begin
 
 	Put_Line("Bench with" & Integer'Image(n) & " samples...");
+	Put_Line("Element size:" & Integer'Image(T'Size / 8));
 
-	for i in 0..n-1 loop
+	for i in 0..n-1 loop -- last bound included!
 		V.Append(createT(i));
 	end loop;
+
+	Put_Line("Length:" & Count_Type'Image(V.Length));
 
 	checksum := U64(0);
 	for E of V loop
 		checksum := checksum + hashT(E);
 	end loop;
-	Put_Line("checksum:" & U64'Image(checksum));
+	Put_Line("Checksum:" & U64'Image(checksum));
 
-	for i in 0..V.Length loop
+	for i in 0..V.Length-1 loop
 	-- while not Is_Empty(V) loop
 		V.Delete_Last;
 	end loop;
 
-	Put_Line("Length:" & Count_Type'Image(V.Length));
 	New_Line;
 
 end BenchmarkProc;

@@ -4,7 +4,7 @@ struct PQnode {
 }
 
 fn bench[T](n int, create_t fn(int) T, hash_t fn(T) u64) u64 {
-	println("Bench with ${n} samples...")
+	println("\nBench with ${n} samples...")
 
 	mut vec := []T{}
 
@@ -12,17 +12,18 @@ fn bench[T](n int, create_t fn(int) T, hash_t fn(T) u64) u64 {
 		vec.insert(vec.len, create_t(i))
 	}
 
+	println("Length: ${vec.len}")
+
 	mut checksum := u64(0)
 	for _, x in vec {
 		checksum += hash_t(x)
 	}
-	println("checksum: ${checksum}")
+	println("Checksum: ${checksum}")
 
 	for vec.len > 0 {
 		vec.pop()
 	}
 
-	println("Length: ${vec.len}\n")
 	return checksum
 }
 

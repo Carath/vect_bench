@@ -15,7 +15,7 @@ public class BenchNoGenerics
 
 	public static long benchChar(int n)
 	{
-		System.out.printf("Bench with %d samples...\n", n);
+		System.out.printf("\nBench with %d samples...\n", n);
 
 		ArrayList<Character> vect = new ArrayList<Character>();
 
@@ -23,17 +23,20 @@ public class BenchNoGenerics
 			vect.add((char) (i % 256));
 		}
 
+		System.out.printf("Length: %d\n", vect.size());
+		double totalMemory = Runtime.getRuntime().totalMemory() / (double) (1 << 30);
+		System.out.printf("Total memory: %.3f GB\n", totalMemory);
+
 		long checksum = 0;
-		for (int x : vect) {
+		for (char x : vect) {
 			checksum += (long) x;
 		}
-		System.out.printf("checksum: %d\n", checksum);
+		System.out.printf("Checksum: %d\n", checksum);
 
 		while (!vect.isEmpty()) {
 			vect.remove(vect.size()-1);
 		}
 
-		System.out.printf("Length: %d\n\n", vect.size());
 		vect = null;
 		System.gc();
 		return checksum;
@@ -41,7 +44,7 @@ public class BenchNoGenerics
 
 	public static long benchInt(int n)
 	{
-		System.out.printf("Bench with %d samples...\n", n);
+		System.out.printf("\nBench with %d samples...\n", n);
 
 		ArrayList<Integer> vect = new ArrayList<Integer>();
 
@@ -49,17 +52,20 @@ public class BenchNoGenerics
 			vect.add(i);
 		}
 
+		System.out.printf("Length: %d\n", vect.size());
+		double totalMemory = Runtime.getRuntime().totalMemory() / (double) (1 << 30);
+		System.out.printf("Total memory: %.3f GB\n", totalMemory);
+
 		long checksum = 0;
 		for (int x : vect) {
 			checksum += (long) x;
 		}
-		System.out.printf("checksum: %d\n", checksum);
+		System.out.printf("Checksum: %d\n", checksum);
 
 		while (!vect.isEmpty()) {
 			vect.remove(vect.size()-1);
 		}
 
-		System.out.printf("Length: %d\n\n", vect.size());
 		vect = null;
 		System.gc();
 		return checksum;
@@ -67,7 +73,7 @@ public class BenchNoGenerics
 
 	public static long benchPQnode(int n)
 	{
-		System.out.printf("Bench with %d samples...\n", n);
+		System.out.printf("\nBench with %d samples...\n", n);
 
 		ArrayList<PQnode> vect = new ArrayList<PQnode>();
 
@@ -76,17 +82,20 @@ public class BenchNoGenerics
 			vect.add(node);
 		}
 
+		System.out.printf("Length: %d\n", vect.size());
+		double totalMemory = Runtime.getRuntime().totalMemory() / (double) (1 << 30);
+		System.out.printf("Total memory: %.3f GB\n", totalMemory);
+
 		long checksum = 0;
 		for (PQnode x : vect) {
 			checksum += (long) x.key + x.item;
 		}
-		System.out.printf("checksum: %d\n", checksum);
+		System.out.printf("Checksum: %d\n", checksum);
 
 		while (!vect.isEmpty()) {
 			vect.remove(vect.size()-1);
 		}
 
-		System.out.printf("Length: %d\n\n", vect.size());
 		vect = null;
 		System.gc();
 		return checksum;

@@ -6,7 +6,7 @@ type
     item: uint64
 
 proc bench[T](n: int, createT: (int) -> T, hashT: (T) -> uint): uint =
-  echo &"Samples: {n}"
+  echo &"\nSamples: {n}"
 
   var vec = newSeq[T](0)
 
@@ -17,15 +17,16 @@ proc bench[T](n: int, createT: (int) -> T, hashT: (T) -> uint): uint =
   #   echo &"{i} -> {vec[i]}"
   #   #echo "$1 -> $2" % [$i, $vec[i]]
 
+  echo &"Length: {len(vec)}"
+
   var checksum : uint = 0
   for i in 0..len(vec)-1:
     checksum += uint(hashT(vec[i]))
-  echo &"checksum: {checksum}"
+  echo &"Checksum: {checksum}"
 
   while len(vec) > 0:
     vec.delete(len(vec)-1) # takes O(n) time
 
-  echo &"Length: {len(vec)}\n"
   return checksum
 
 #const n = 10

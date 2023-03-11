@@ -11,7 +11,9 @@ The more convenient way is to install [nvm](https://github.com/nvm-sh/nvm), foll
 
 To install a specific version of node (e.g ``` v12.22.12 ```) run ``` nvm install v12.22.12 ```.
 
-To switch to another installed version run ``` nvm use v18.14.2 ```.
+To switch to another installed version run for example ``` nvm use v18.14.2 ```.
+
+To check the used version of node: ``` node -v ```.
 
 
 ## Usage
@@ -20,4 +22,4 @@ For running the benchmark in a web browser, open the ``` index.html ``` file in 
 
 *Note: tested on Mozilla Firefox 109.0 (Ubuntu).*
 
-For testing with node, simply run ``` node bench_node.js ```
+For testing with node, select the desired node version and run ``` node bench_node.js ```

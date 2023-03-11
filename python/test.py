@@ -2,13 +2,13 @@ def bench(n, createT, hashT):
 	vec = []
 	for i in range(n):
 		vec.append(createT(i))
+	print("Size:", len(vec))
 	checksum = 0
 	for i in range(n):
 		checksum += hashT(vec[i])
-	print("checksum:", checksum)
+	print("Checksum:", checksum)
 	while len(vec) > 0:
 		vec.pop(len(vec)-1)
-	print("Size:", len(vec))
 	return checksum
 
 class PQnode:

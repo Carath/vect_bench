@@ -18,7 +18,7 @@ public abstract class BenchType
 
 	public long bench(int n)
 	{
-		System.out.printf("Bench with %d samples...\n", n);
+		System.out.printf("\nBench with %d samples...\n", n);
 
 		ArrayList<BenchType> vect = new ArrayList<BenchType>();
 
@@ -26,17 +26,20 @@ public abstract class BenchType
 			vect.add(this.create(i));
 		}
 
+		System.out.printf("Length: %d\n", vect.size());
+		double totalMemory = Runtime.getRuntime().totalMemory() / (double) (1 << 30);
+		System.out.printf("Total memory: %.3f GB\n", totalMemory);
+
 		long checksum = 0;
 		for (BenchType x : vect) {
 			checksum += x.hash();
 		}
-		System.out.printf("checksum: %d\n", checksum);
+		System.out.printf("Checksum: %d\n", checksum);
 
 		while (!vect.isEmpty()) {
 			vect.remove(vect.size()-1);
 		}
 
-		System.out.printf("Length: %d\n\n", vect.size());
 		vect = null;
 		System.gc();
 		return checksum;

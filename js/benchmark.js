@@ -33,7 +33,7 @@ function runBenchmarks() {
 
 function benchmark(n, create_t, hash_t) {
 	try {
-		console.log("Bench with", n, "samples...");
+		console.log("\nBench with", n, "samples...");
 
 		let arr = [];
 
@@ -41,17 +41,18 @@ function benchmark(n, create_t, hash_t) {
 			arr.push(create_t(i));
 		}
 
+		console.log("Length:", arr.length);
+
 		let checksum = 0; // type 'number'
 		for (let i = 0; i < arr.length; ++i) {
 			checksum += hash_t(arr[i]);
 		}
-		console.log("checksum:", checksum);
+		console.log("Checksum:", checksum);
 
 		while (arr.length > 0) {
 			arr.pop();
 		}
 
-		console.log("Length:", arr.length);
 		return checksum;
 	}
 	catch (error) {
