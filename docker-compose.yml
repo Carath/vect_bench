@@ -1,0 +1,14 @@
+version: "2.3"
+
+services:
+
+  vectors:
+    image: vectors:1.0
+    container_name: vectors
+    build: .
+    tty: true
+    stdin_open: true
+    network_mode: host
+    # command: $COMMAND
+    # volumes:
+    #   - "./$PWD:/app"

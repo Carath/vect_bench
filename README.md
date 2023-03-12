@@ -41,10 +41,62 @@ Partial benchmark results (only char and int vectors):
 | Python 3                 | 1m 15 s    | 3.8 GB    |                                                         |
 
 Notes:
-
 - Most time measurements here have been done using the ``` time ``` command available on Linux systems. To measure the RAM usage, use ``` /usr/bin/time -v ``` instead.
-- Tests have been done on an Intel i5-7300HQ 2.50GHz CPU.
+- Tests have been done on an Intel i5-7300HQ 2.50GHz CPU on Ubuntu 20.04.
 - Care has been taken not to include the compile time of the tested targets (e.g for rust using ``` cargo build ``` instead of ``` cargo run ``` and so on).
+
+
+## Installation
+
+Two main installation methods are given: one specific to Ubuntu, the other more universal using [Docker](https://docs.docker.com/engine/install).
+
+### Without Docker
+
+Simply run on an Ubuntu system: ``` sh install.sh ``` and *voilà*.
+
+### Using Docker
+
+The benchmarking environment can easily be deployed on any system with Docker installed. The resulting image should build in approximately 6 minutes, and should weight around 3 GB.
+
+Notes:
+- The commands below may need to be run with root privilege.
+- For a better isolation, no Docker volume is mounted, therefore make sure to rebuild the image with each code change.
+
+#### With vanilla Docker
+
+Building the image:
+
+```sh
+docker build -t vectors:1.0 .
+```
+
+Running a container:
+
+```sh
+docker run -it vectors:1.0 /bin/bash
+```
+
+#### With Docker Compose
+
+Additionally, one can also use [Docker Compose](https://docs.docker.com/compose/install) if available.
+
+To build the image use:
+
+```sh
+docker-compose build
+```
+
+Running a container:
+
+```sh
+docker-compose run vectors
+```
+
+Finally, to remove said container:
+
+```sh
+docker-compose down
+```
 
 
 ## TODO
@@ -52,4 +104,3 @@ Notes:
 - Cleanup the C version code
 - C version: does not compile without the -O2 flag !!!
 - C version: inline EQ function?
-- Global installation script? Docker build?

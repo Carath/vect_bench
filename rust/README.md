@@ -109,4 +109,4 @@ Or also with the following command, having the same effect:
 RUSTFLAGS="--emit asm" cargo build --release
 ```
 
-Note that emitting assembly actually changes the generated target. Here, it somewhat yields a 16% speed gain! Also, this definitely is a cargo thing, since emitting assembly only using rustc does not change the target. Finally, the ``` --emit asm ``` flag can be used with the two commands above for dynamic builds (here with the same speed gain as in the static builds).
+The assembly will be in the ``` target/release/deps/ ``` directory. Note that emitting assembly actually changes the generated target. Here, it somewhat yields a 16% speed gain! Also, this definitely is a cargo thing, since emitting assembly only using rustc does not change the target. Finally, the ``` --emit asm ``` flag can be used with the two commands above for dynamic builds (here with the same speed gain as in the static builds).

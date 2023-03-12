@@ -13,7 +13,9 @@ To install a specific version of node (e.g ``` v12.22.12 ```) run ``` nvm instal
 
 To switch to another installed version run for example ``` nvm use v18.14.2 ```.
 
-To check the used version of node: ``` node -v ```.
+To see the list of all installed node versions: ``` nvm ls ```.
+
+To check the currently used version of node: ``` node -v ```.
 
 
 ## Usage

@@ -1,4 +1,4 @@
-// Note: Java ArrayLists can have at most 2^31 − 1 elements... SHAMEFUL!
+// Note: Java ArrayLists can have at most 2^31-1 elements... SHAMEFUL!
 import java.util.ArrayList;
 
 public class BenchNoGenerics
