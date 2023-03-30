@@ -22,6 +22,6 @@ To check the currently used version of node: ``` node -v ```.
 
 For running the benchmark in a web browser, open the ``` index.html ``` file in said web browser.
 
-*Note: tested on Mozilla Firefox 109.0 (Ubuntu).*
+*Note: tested on Mozilla Firefox 109.0 64-bit (Ubuntu).*
 
 For testing with node, select the desired node version and run ``` node bench_node.js ```

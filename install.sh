@@ -12,13 +12,14 @@ apt-get -y install \
 	make \
 	cmake \
 	xz-utils \
-	time
+	time \
+	bc
 
 # Ada
 apt-get -y install gnat
 
 # C
-apt-get -y install gcc
+apt-get -y install gcc clang
 
 # C++
 apt-get -y install g++

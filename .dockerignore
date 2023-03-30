@@ -1,2 +1,16 @@
-.git/
+**/.git/
+
+# To not override the image 'install' directory:
 install/
+
+# To not include builds results:
+**/bin/*
+**/build/*
+**/target/*
+**/obj/*
+**/__pycache__/
+**/*.exe
+**/benchmark_inst
+**/bench
+**/bench.test
+**/test

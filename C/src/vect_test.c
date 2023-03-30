@@ -1,43 +1,19 @@
 #include <stdio.h>
 
-// Those types can be changed as desired:
-typedef double KeyType;
-typedef size_t ItemType;
+// Adding the actual implementation for the 3 vector instanciations in this source file:
+#define VECT_IMPL // only define this once per type instanciation!
+#include "vect_instances.h"
 
-typedef struct
-{
-	KeyType key;
-	ItemType item;
-} __attribute__ ((packed, aligned(4))) PQnode;
-
-
-#undef T
-#define T uint8_t
-#define VECT_IMPL
-#include "Vectors.h"
-
-#undef T
-#define T uint32_t
-#define VECT_IMPL
-#include "Vectors.h"
-
-#undef T
-#define T PQnode
-#define VECT_IMPL
-#include "Vectors.h"
-
-
-int main(void)
+int main(int argc, char const *argv[])
 {
 	// int n = 10;
 	int n = 100000000;
-
 	printf("-> Samples number: %d\n\n", n);
 
 	//////////////////////////////////////////////////
 	// 'uint8_t' variant:
 
-	Vect(uint8_t) *v0 = vect_create(uint8_t)();
+	Vect(uint8_t) *v0 = vect_createEmpty(uint8_t)();
 
 	for (int i = 0; i < n; ++i) {
 		vect_add(uint8_t)(v0, (uint8_t) i);
@@ -59,7 +35,7 @@ int main(void)
 	//////////////////////////////////////////////////
 	// 'uint32_t' variant:
 
-	Vect(uint32_t) *v1 = vect_create(uint32_t)();
+	Vect(uint32_t) *v1 = vect_createEmpty(uint32_t)();
 
 	for (int i = 0; i < n; ++i) {
 		vect_add(uint32_t)(v1, (uint32_t) i);
@@ -81,7 +57,7 @@ int main(void)
 	//////////////////////////////////////////////////
 	// 'PQnode' variant:
 
-	Vect(PQnode) *v2 = vect_create(PQnode)();
+	Vect(PQnode) *v2 = vect_createEmpty(PQnode)();
 
 	for (int i = 0; i < n; ++i) {
 		PQnode node = { .key = (double) i, .item = (size_t) i};

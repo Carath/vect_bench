@@ -1,21 +1,76 @@
-// Do not include this directly! Public header has to be vect_instances.h
+////////////////////////////////////////////////////////////////////////////////
+// About
+// -----
+// This small library is a C implementation of generic vectors (i.e dynamic arrays)
+// for 32-bit and 64-bit systems. It is designed to be fast, lightweight, and safe:
+// bound checking is done (unless asserts are disabled). Furthermore memory footprint
+// will scale dynamically according to a vector's current number of elements.
+//
+// Usage
+// -----
+// To use this in another project, simply copy the 'Vectors.h' and 'VectorsImpl.h' files.
+// The first header can be included anywhere to expose the library API, once per type
+// instantiation. The second header shouldn't be included directly. In order to instantiate
+// the API for vectors with elements of the desired type, said type must be specified before
+// including the 'Vectors.h' file. Below is an example for the 'int' type:
+//
+//   #define T int
+//   #include "Vectors.h"
+//
+// Note that what precedes does not instantiate the actual implementation, doing so requires
+// to define the VECT_IMPL symbol before the header inclusion in a chosen source file.
+// Note that this must be done only *once* per vector type instantiation globally.
+//
+// Parameters
+// ----------
+// The VECT_GROWTH_FACTOR, VECT_INIT_CAPACITY and VECT_CHUNK parameters can be changed
+// from their default values from outside the library, and so for each type instantiation.
+// To do so simply redefine them with a chosen value before including the Vectors.h header.
+// See below for their purpose. Additionally, further functions can be made available for
+// a given type if the macro T_EQUALITY is defined (again before this header inclusion).
+// This macro must encode the equality relationship between 2 elements of that type.
+//
+// Guarantees
+// ----------
+// - This library will work on 32-bit systems until the maximum block size is reached
+//   (2^32 values). There shouldn't be such issues on 64-bit machines on which the RAM
+//   quantity will be the limiting factor.
+// - At any given time, a vector size and capacity shall verify: 0 <= size <= capacity
+// - Upon creation of a vector of a given size, the array values at index within
+//   0 and size-1 included will be initialized to 0.
+// - A vector's capacity will be a multiple of the VECT_CHUNK parameter.
+// - Basic vector accessors like vect_size(T) will be inlined, thus have zero overhead.
+//
+// Limitations
+// -----------
+// - This *must* be compiled with some optimization flag. Typically -O2, or at least -O.
+// - It is ill advised to copy a vector's array address or modify it, for it may break
+//   the library or user code, since the array will be reallocated internally. Similarly,
+//   changing a vector's size or capacity should be done with caution.
+// - There may be a speed penalty when the implementation instantiation is located in
+//   another source file than where it is used. Using LTO (see makefile) may mitigate this.
+//
+////////////////////////////////////////////////////////////////////////////////
 
-// - if T is missing, the code below cannot be defined
-// - at exit, undefining T for:
-//   - easy redefinition of T with another type.
-//   - protect against multiple inclusion with the same type.
-// Careful tho, yeah.h must be reincluded if type T is redefined to a previous value.
+// Parameters - those can be changed from outside for each instantiation.
 
-// blabla on T_EQUALITY(a, b) (equality inlining) + undef too
+// VECT_GROWTH_FACTOR: used for resizing the array. It must be > 1,
+// and can either be an integer (typically 2) or a floating point value.
+#ifndef VECT_GROWTH_FACTOR
+#define VECT_GROWTH_FACTOR 2
+#endif
 
-// ... VECT_IMPL to be defined in a single .c file by instantiation!
+// VECT_INIT_CAPACITY: minimum capacity of an empty vector upon creation. Must be >= 0.
+#ifndef VECT_INIT_CAPACITY
+#define VECT_INIT_CAPACITY 8
+#endif
 
-// VECT_INIT_CAPACITY and VECT_GROWTH_FACTOR can be changed, for each instantiation!
+// VECT_CHUNK: a power of two of which any vector's capacity will be a multiple.
+#ifndef VECT_CHUNK
+#define VECT_CHUNK 8
+#endif
 
-// Careful not to do T* a = v->array or v->array = ...
-// Related: issue with: v->array[i] = vect_remove(pq_Node)(v) [FIXED]
-
-// Lib goal: lightweight, safe and fast library of generic vectors.
+////////////////////////////////////////////////////////////////////////////////
 
 #ifdef T
 
@@ -23,289 +78,166 @@
 extern "C" {
 #endif
 
-// #include <stdio.h>
-// #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <assert.h>
-// #include <string.h>
-// #include <math.h> // for ceil
 
-
-
+#ifdef CAT
+#undef CAT
+#endif
 #define CAT(X,Y) X##_##Y
+
+#ifdef TEMPLATE
+#undef TEMPLATE
+#endif
 #define TEMPLATE(X,Y) CAT(Y, X)
 
-// typedef uint16_t idxType;
-// typedef uint32_t idxType;
-// typedef uint64_t idxType;
-typedef size_t idxType;
+#ifdef idxType
+#undef idxType
+#endif
+#define idxType uint64_t // needed to prevent overflows
 
-
-// 64-bit (unsigned) integers are necessary for proper working of this lib without sacrificing
-// some performances when addind elements to a vector, and allow for more than 4.2E9 elements in a vector.
-// Indeed with n-bit integers and this lightweight implementation, issues will arise when the elements number
-// is greater than (2^n-1) / VECT_GROWTH_FACTOR. With a default factor of 2, this means 32767 with 16-bit,
-// 2.1E9 with 32-bit and 9.2E18 with 64-bit integers which is more than enough.
+////////////////////////////////////////////////////////////////////////////////
 
 #define Vect(T) TEMPLATE(T, Vect)
 typedef struct
 {
-	// The underlying array of T elements
-	T *array;
+	T *array; // the underlying array of T-type elements
 	idxType size; // actual number of elements (<= capacity)
-	idxType capacity; // in elements number. Always > 0. Private
+	idxType capacity; // current maximum number of elements
 } Vect(T);
 
-// ofuscate the array? Same machine code?
 
-// uint32_t => limit = 2^32 elements or RAM size
-// uint32_t vs size_t vs uint64_t ?
-
-// What happens when the max capacity is reached?
-
-
-#ifndef VECT_INIT_CAPACITY
-#define VECT_INIT_CAPACITY 8 // must be > 0
-#endif
-
-#ifndef VECT_GROWTH_FACTOR
-#define VECT_GROWTH_FACTOR 2.0 // must be > 1
-// #define VECT_GROWTH_FACTOR 1.567 // must be > 1
-#endif
-
-// ...
-// ... rename it as vect_resize() now? NO, possible confusion with 'size' which won't change a bit.
-
-#define vect_setCapacity(T) TEMPLATE(T, vect_setCapacity)
-void vect_setCapacity(T)(Vect(T) *vect, idxType newCapacity);
-
-// // Grows or shrinks the vector capacity if possible, depending on 'resizeFactor'.
-// #define vect_resize(T) TEMPLATE(T, vect_resize)
-// inline void vect_resize(T)(Vect(T) *vect, double resizeFactor)
-// {
-// 	// assert(resizeFactor > 0.); // preventing an undefined behavior.
-// 	// resizeFactor = resizeFactor > 0. ? resizeFactor : 0.; // preventing an undefined behavior.
-// 	// resizeFactor = fmax(0., resizeFactor); // preventing an undefined behavior.
-// 	// vect_setCapacity(T)(vect, (idxType) ceil(resizeFactor * vect->capacity));
-
-// 	resizeFactor = resizeFactor > 0. ? resizeFactor : 0.; // preventing an undefined behavior.
-// 	vect_setCapacity(T)(vect, (idxType) (resizeFactor * vect->capacity));
-// 	// vect_setCapacity(T)(vect, (idxType) (resizeFactor * vect->capacity + 0.5)); // without ceil (so no math.h)
-
-// 	// vect_setCapacity(T)(vect, vect->capacity * resizeFactor);
-// }
-
-
-
-// ...
-#define vect_create_c(T) TEMPLATE(T, vect_create_c)
-Vect(T)* vect_create_c(T)(idxType capacity);
-
-// ...
+// Creates a new vector with the given size and at least the given capacity.
+// The first 'size' values are guaranteed to be initialized to 0.
 #define vect_create(T) TEMPLATE(T, vect_create)
-inline Vect(T)* vect_create(T)(void)
+Vect(T)* vect_create(T)(idxType capacity, idxType size);
+
+// Creates a new empty vector, of capacity at least equal to VECT_INIT_CAPACITY.
+#define vect_createEmpty(T) TEMPLATE(T, vect_createEmpty)
+inline Vect(T)* vect_createEmpty(T)(void)
 {
-	return vect_create_c(T)(VECT_INIT_CAPACITY);
+	return vect_create(T)(VECT_INIT_CAPACITY, 0);
 }
 
-
-// // ...
-// #define vect_create(T) TEMPLATE(T, vect_create)
-// Vect(T)* vect_create(T)(void);
-
-
-
-
-
-
-
-// ...
+// Frees the given vector, passed by address.
 #define vect_destroy(T) TEMPLATE(T, vect_destroy)
 void vect_destroy(T)(Vect(T) **vect);
 
-// Does not shrink the allocated memory.
+// Sets the capacity of the vector to a value at least equal to the desired one.
+// Be mindful not to overuse this function, it may hinder the program performance.
+#define vect_setCapacity(T) TEMPLATE(T, vect_setCapacity)
+void vect_setCapacity(T)(Vect(T) *vect, idxType newCapacity);
+
+// Sets the vector size to 0. This does not shrink
+// the allocated memory or change its values.
 #define vect_clear(T) TEMPLATE(T, vect_clear)
 inline void vect_clear(T)(Vect(T) *vect)
 {
 	vect->size = 0;
 }
 
-// ...
+// Checks if the vector is empty.
 #define vect_isEmpty(T) TEMPLATE(T, vect_isEmpty)
 inline bool vect_isEmpty(T)(const Vect(T) *vect)
 {
 	return vect->size == 0;
 }
 
-// ...
+// Returns the vector size.
 #define vect_size(T) TEMPLATE(T, vect_size)
 inline idxType vect_size(T)(const Vect(T) *vect)
 {
 	return vect->size;
 }
 
-// ...
+// Returns the vector capacity.
+#define vect_capacity(T) TEMPLATE(T, vect_capacity)
+inline idxType vect_capacity(T)(const Vect(T) *vect)
+{
+	return vect->capacity;
+}
+
+// Returns the element at index i. Does bound checking.
 #define vect_get(T) TEMPLATE(T, vect_get)
 inline T vect_get(T)(const Vect(T) *vect, idxType i)
 {
-	assert(i < vect->size);
+	assert(i < vect->size && "Out of bound error in vect_get()");
 	return vect->array[i];
 }
 
-// ...
+// Sets the element at index i with the given value. Does bound checking.
 #define vect_set(T) TEMPLATE(T, vect_set)
-inline void vect_set(T)(Vect(T) *vect, idxType i, T value)
+inline void vect_set(T)(Vect(T) *vect, idxType i, const T value)
 {
-	assert(i < vect->size);
+	assert(i < vect->size && "Out of bound error in vect_set()");
 	vect->array[i] = value;
 }
 
-// #include <stdlib.h>
-
-// ...
+// Adds the given element at the end of the vector.
 #define vect_add(T) TEMPLATE(T, vect_add)
-inline void vect_add(T)(Vect(T) *vect, T value)
-{
-	if (vect->size >= vect->capacity) {
-		// // vect_setCapacity(T)(vect, (idxType) (vect->capacity * VECT_GROWTH_FACTOR)); // dangerous, assuming no issue...
-		// // vect_setCapacity(T)(vect, (idxType) (vect->capacity * VECT_GROWTH_FACTOR + 0.5)); // not the same!!!
-		// vect_setCapacity(T)(vect, (idxType) ceil(vect->capacity * VECT_GROWTH_FACTOR)); // ok but uses math.h
+void vect_add(T)(Vect(T) *vect, const T value);
 
-		// #define TRUC ((idxType) ((((idxType) 1) << (8*sizeof(idxType)-1)) / (VECT_GROWTH_FACTOR / 2.0)))
-		// assert(vect->capacity < TRUC); // makes it slower...
-		// // printf("TRUC: %lu\n", TRUC);
-		// // exit(0);
-
-		idxType newCapacity = (idxType) (vect->capacity * VECT_GROWTH_FACTOR); // overflows with uint32_t !!!
-
-		// // For uint32_t:
-		// #define ZE_MAX 4294967295 // 2^32-1
-		// assert(vect->size <= ZE_MAX); // cannot add more!
-		// double f = (vect->capacity * VECT_GROWTH_FACTOR);
-		// idxType newCapacity = f > ZE_MAX ? ZE_MAX : f;
-		// if (vect->capacity < ZE_MAX) {
-
-		// printf("%u\n", newCapacity);
-
-		// vect_setCapacity(T)(vect, newCapacity); // unsafe in some cases!
-		// vect_setCapacity(T)(vect, newCapacity > vect->size ? newCapacity : newCapacity+1); // slower with gcc
-		// vect_setCapacity(T)(vect, newCapacity == vect->size ? newCapacity+1 : newCapacity);
-		vect_setCapacity(T)(vect, newCapacity == vect->size ? vect->size+1 : newCapacity);
-		// vect_setCapacity(T)(vect, newCapacity > vect->size ? newCapacity : vect->size+1); // slower with gcc
-		// vect_setCapacity(T)(vect, newCapacity == vect->capacity ? vect->capacity+1 : newCapacity); // slower with gcc
-
-		// }
-
-		// TODO:
-		// - if capacity > 2^32, lower it down to 2^32.
-		// - if size > 2^32, exit with an error message.
-	}
-	// overflow issue?
-
-	vect->array[vect->size++] = value;
-}
-
-
-
-// // ...
-// // 	// Careful, 2 steps needed: v->array may be reallocated during a vect_remove(pq_Node)() call!
-// // 	pq_Node node = vect_remove(pq_Node)(v);
-// // 	v->array[0] = node;
-// // 	T x = vect_remove(T)(v); VS T x = vect_get(T)(v, v->size-1); vect_remove(T)(v);
-// #define vect_remove(T) TEMPLATE(T, vect_remove)
-// inline T vect_remove(T)(Vect(T) *vect)
-// {
-// 	assert(vect->size > 0);
-
-// 	// if (vect->size < vect->capacity / 4)
-// 	// 	vect_setCapacity(T)(vect, vect->capacity / 2);
-
-// 	if (vect->size * (VECT_GROWTH_FACTOR * VECT_GROWTH_FACTOR) < vect->capacity)
-// 		vect_setCapacity(T)(vect, (idxType) (vect->capacity / VECT_GROWTH_FACTOR));
-
-// 	// if ((idxType) (vect->size * (VECT_GROWTH_FACTOR * VECT_GROWTH_FACTOR)) < vect->capacity)
-// 	// 	vect_setCapacity(T)(vect, (idxType) (vect->capacity / VECT_GROWTH_FACTOR));
-
-// 	return vect->array[--vect->size];
-// }
-
-// ...
-// Use vect_get() to get the last value before deleting it.
+// Removes the last element of the vector. Does nothing on empty vectors.
+// Note: use vect_get() to get said value before deleting it.
 #define vect_remove(T) TEMPLATE(T, vect_remove)
-inline void vect_remove(T)(Vect(T) *vect)
-{
-	if (vect->size > 0) {
+void vect_remove(T)(Vect(T) *vect);
 
-		// if (vect->size < vect->capacity / 4)
-		// 	vect_setCapacity(T)(vect, vect->capacity / 2);
-
-		if (vect->size * (VECT_GROWTH_FACTOR * VECT_GROWTH_FACTOR) < vect->capacity) // left side left as double to prevent overflows.
-			vect_setCapacity(T)(vect, (idxType) (vect->capacity / VECT_GROWTH_FACTOR));
-
-		// if ((idxType) (vect->size * (VECT_GROWTH_FACTOR * VECT_GROWTH_FACTOR)) < vect->capacity) // overflow risk!
-		// 	vect_setCapacity(T)(vect, (idxType) (vect->capacity / VECT_GROWTH_FACTOR));
-
-		// if (vect->size < (idxType) (vect->capacity / (VECT_GROWTH_FACTOR * VECT_GROWTH_FACTOR))) // right side can be casted to idxType safely...
-		// 	vect_setCapacity(T)(vect, (idxType) (vect->capacity / VECT_GROWTH_FACTOR));
-
-		--vect->size;
-	}
-}
-
-
-
-// ...
+// Creates a vector from a plain array, which is copied.
+// Careful, the given array size must be correct.
 #define vect_fromArray(T) TEMPLATE(T, vect_fromArray)
 Vect(T)* vect_fromArray(T)(const T *array, idxType size);
 
-// ...
+// Returns a copy of a vector. The vector elements are not
+// deep copied. The initial vector capacity is also copied.
 #define vect_copy(T) TEMPLATE(T, vect_copy)
 Vect(T)* vect_copy(T)(const Vect(T) *vect);
 
-// ...
-// ... vect1 = vect2 possible! (same address)
+// Creates a new vector by merging two vectors whose arrays can overlap.
 #define vect_merge(T) TEMPLATE(T, vect_merge)
 Vect(T)* vect_merge(T)(const Vect(T) *vect1, const Vect(T) *vect2);
 
-// ...
+// Returns a new vector containing only the elements of the input vector
+// verifying a given predicate. Elements order and redundancies are preserved.
 #define vect_filter(T) TEMPLATE(T, vect_filter)
-Vect(T)* vect_filter(T)(const Vect(T) *vect, bool (*predicate)(T));
-
-// // ...
-// #define vect_print(T) TEMPLATE(T, vect_print)
-// void vect_print(T)(const Vect(T) *vect, void (*print)(const T*));
+Vect(T)* vect_filter(T)(const Vect(T) *vect, bool (*predicate)(const T));
 
 
 #ifdef T_EQUALITY
 
-// Returns vect->size if 'value' isn't found.
-#define vect_index(T) TEMPLATE(T, vect_index)
-idxType vect_index(T)(const Vect(T) *vect, T value);
+// Function for testing T-type equality. This is cleaner
+// than using the given macro which will be undef anyway.
+#define vect_T_equality(T) TEMPLATE(T, vect_T_equality)
+inline bool vect_T_equality(T)(const T x, const T y)
+{
+	return T_EQUALITY(x, y);
+}
 
-// ...
-#define vect_find(T) TEMPLATE(T, vect_find)
-inline bool vect_find(T)(const Vect(T) *vect, T value)
+// Returns the first index at which 'value' appears in the vector.
+// If said value is not found, vect->size is returned.
+#define vect_index(T) TEMPLATE(T, vect_index)
+idxType vect_index(T)(const Vect(T) *vect, const T value);
+
+// Checks if the given value is present in the vector.
+#define vect_isIn(T) TEMPLATE(T, vect_isIn)
+inline bool vect_isIn(T)(const Vect(T) *vect, const T value)
 {
 	return vect_index(T)(vect, value) != vect->size;
 }
 
 #endif // T_EQUALITY
 
-#ifdef VECT_IMPL
-#include "VectorsImpl.h" // The implementation
-#undef VECT_IMPL // .............
-#endif // VECT_IMPL
+////////////////////////////////////////////////////////////////////////////////
 
-// ...
+#include "VectorsImpl.h" // the implementation.
+
 #ifdef T_EQUALITY
-#undef T_EQUALITY // .............
+#undef T_EQUALITY // to prevent leaking T_EQUALITY to another instantiation.
 #endif // T_EQUALITY
-
 
 #if __cplusplus
 }
 #endif
 
-#undef T // .............
+#undef T // to prevent leaking T to another instantiation.
 #endif // T

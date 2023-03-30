@@ -17,5 +17,10 @@ COPY install.sh .
 # This script only supports Ubuntu.
 RUN sh install.sh
 
+# Optional: installing an editor:
+RUN apt-get -y install vim
+# RUN apt-get -y install vim-tiny
+# RUN apt-get -y install nano
+
 # Not using a volume for better isolation:
 COPY . .

@@ -18,21 +18,27 @@ For Linux (Ubuntu) run the following:
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-To check the installed versions (here ``` 1.67.0 ```):
+To check the installed versions (here ``` 1.68.0 ```) and list all target architectures:
 
 ```sh
 rustc --version
 cargo --version --verbose
-rustc --print target-list # list all target architectures
+rustc --print target-list
 ```
 
-See also the ``` ~/.cargo/ ``` and ``` ~/.rustup/ ``` directories.
+To update both rustc and cargo, simply use:
+
+```
+rustup update
+```
 
 Moreover, the Rust Programming Language book can be viewed by using:
 
 ```sh
 rustup docs --book
 ```
+
+See also the ``` ~/.cargo/ ``` and ``` ~/.rustup/ ``` directories for config files.
 
 
 ## Basic cargo commands
@@ -55,8 +61,7 @@ Note that executables will be created in ``` target/release/ ```. Also, by defau
 cargo build --release
 ```
 
-To run an unoptimized project use ``` cargo run ```, and ``` cargo run --release ``` for the optimized version.
-Note that the ``` cargo run ``` command will build the project if needed, making the ``` cargo build ``` step unnecessary.
+To run an unoptimized project use ``` cargo run ```, and ``` cargo run --release ``` for the optimized version. Note that the ``` cargo run ``` command will build the project if needed, making the ``` cargo build ``` step unnecessary. However this will not be used here, to avoid including the compile time of the tested targets during their benchmarks.
 
 Finally, to remove the generated ``` target/ ``` directory use: ``` cargo clean ```
 
@@ -76,19 +81,19 @@ rustc -C debuginfo=0 -C opt-level=3 --emit asm src/main.rs
 
 ### Dynamic builds
 
-By default rust programs are compiled by cargo statically, therefore parts of the standard library will be included in the executable, resulting in (somewhat) large files (a few MB). To prevent this, one can compile dynamically and specify the path of the shared lib (here ``` libstd-2a15b3cd0948397b.so ```):
+By default rust programs are compiled by cargo statically, therefore parts of the standard library will be included in the executable, resulting in (somewhat) large files (a few MB). To prevent this, one can compile dynamically and specify the path of the shared lib (here of the form ``` libstd-*.so ```):
 
 Method 1:
 
 ```sh
 cargo rustc --release -- \
-  -C prefer-dynamic -C link-arg=-Wl,-rpath=/home/mypc/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib
+  -C prefer-dynamic -C link-arg=-Wl,-rpath=$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib
 ```
 
 Method 2:
 
 ```sh
-RUSTFLAGS="-C prefer-dynamic -C link-arg=-Wl,-rpath=/home/mypc/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib" \
+RUSTFLAGS="-C prefer-dynamic -C link-arg=-Wl,-rpath=$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib" \
   cargo build --release
 ```
 
