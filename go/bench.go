@@ -14,7 +14,7 @@ func main() {
 
 func thebenchmark() {
 	// n := 10
-	n := 100000000
+	n := 100_000_000
 
 	bench(n, func(x int) byte { return byte(x) }, func(x byte) uint64 { return uint64(x) })
 	bench(n, func(x int) int { return x }, func(x int) uint64 { return uint64(x) })
@@ -34,7 +34,7 @@ func bench[T any](n int, create_t func(int) T, hash_t func(T) uint64) uint64 {
 	fmt.Printf("Length: %d\n", len(vec))
 	var m runtime.MemStats
 	runtime.ReadMemStats(&m)
-	fmt.Printf("Memory: %.3f GB\n", float32(m.Alloc) / (1 << 30))
+	fmt.Printf("Memory: %.3f GB\n", float32(m.Alloc) / 1.0e+9)
 
 	checksum := uint64(0)
 	for _, x := range vec {

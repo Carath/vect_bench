@@ -14,7 +14,7 @@ public class BenchLambda
 	public static void main(String[] args)
 	{
 		// int n = 10;
-		int n = 100000000;
+		int n = 100_000_000;
 
 		bench(n,
 			(CreateT<Character>) (x) -> (char) (x % 256),
@@ -43,7 +43,7 @@ public class BenchLambda
 		}
 
 		System.out.printf("Length: %d\n", vect.size());
-		double totalMemory = Runtime.getRuntime().totalMemory() / (double) (1 << 30);
+		double totalMemory = Runtime.getRuntime().totalMemory() / 1.0e+9;
 		System.out.printf("Total memory: %.3f GB\n", totalMemory);
 
 		long checksum = 0;

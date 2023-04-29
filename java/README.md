@@ -34,9 +34,11 @@ To run the pure OOP variant use instead:
 time java -mx8g -cp build/ BenchType
 ```
 
-Note: this benchmark uses around 6 GB of RAM, but to be sure an amount of 8 GB has been allowed to the JVM with the ``` -mx8g ``` flag (the default max RAM usage being 4 GB on a 16 GB machine). Also, indications have been given to Java's garbage collector in the hope of freeing some unneeded memory with the instructions below. This generally speeds up the benchmarks a bit.
+Note 1: this benchmark uses around 6 GB of RAM, but to be sure an amount of 8 GB has been allowed to the JVM with the ``` -mx8g ``` flag (the default max RAM usage being 4 GB on a 16 GB machine). Also, indications have been given to Java's garbage collector in the hope of freeing some unneeded memory with the instructions below. This generally speeds up the benchmarks a bit.
 
 ```java
 vect = null; // the now empty vector.
 System.gc(); // asking the GC to consider freeing stuff.
 ```
+
+Note 2: wrapping the *byte* type inside a class yields slower code and more RAM usage than using the *Character* wrapper of the 2-bytes *char* type.

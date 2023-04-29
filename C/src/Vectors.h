@@ -62,7 +62,7 @@
 
 // VECT_INIT_CAPACITY: minimum capacity of an empty vector upon creation. Must be >= 0.
 #ifndef VECT_INIT_CAPACITY
-#define VECT_INIT_CAPACITY 8
+#define VECT_INIT_CAPACITY 0
 #endif
 
 // VECT_CHUNK: a power of two of which any vector's capacity will be a multiple.
@@ -71,6 +71,11 @@
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
+
+#ifdef VECT_VERSION
+#undef VECT_VERSION
+#endif
+#define VECT_VERSION 1.1
 
 #ifdef T
 

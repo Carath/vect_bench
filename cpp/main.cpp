@@ -40,7 +40,7 @@ size_t bench(int n, C && createT, H && hashT)
 int main(int argc, char const *argv[])
 {
 	// int n = 10;
-	int n = 100000000;
+	int n = 100'000'000;
 	cout << "Samples: " << n << endl;
 
 	bench<uint8_t>(n,

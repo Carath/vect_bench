@@ -6,7 +6,7 @@ public class BenchNoGenerics
 	public static void main(String[] args)
 	{
 		// int n = 10;
-		int n = 100000000;
+		int n = 100_000_000;
 
 		benchChar(n);
 		benchInt(n);
@@ -24,7 +24,7 @@ public class BenchNoGenerics
 		}
 
 		System.out.printf("Length: %d\n", vect.size());
-		double totalMemory = Runtime.getRuntime().totalMemory() / (double) (1 << 30);
+		double totalMemory = Runtime.getRuntime().totalMemory() / 1.0e+9;
 		System.out.printf("Total memory: %.3f GB\n", totalMemory);
 
 		long checksum = 0;
@@ -53,7 +53,7 @@ public class BenchNoGenerics
 		}
 
 		System.out.printf("Length: %d\n", vect.size());
-		double totalMemory = Runtime.getRuntime().totalMemory() / (double) (1 << 30);
+		double totalMemory = Runtime.getRuntime().totalMemory() / 1.0e+9;
 		System.out.printf("Total memory: %.3f GB\n", totalMemory);
 
 		long checksum = 0;
@@ -83,7 +83,7 @@ public class BenchNoGenerics
 		}
 
 		System.out.printf("Length: %d\n", vect.size());
-		double totalMemory = Runtime.getRuntime().totalMemory() / (double) (1 << 30);
+		double totalMemory = Runtime.getRuntime().totalMemory() / 1.0e+9;
 		System.out.printf("Total memory: %.3f GB\n", totalMemory);
 
 		long checksum = 0;

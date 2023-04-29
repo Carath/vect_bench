@@ -26,13 +26,13 @@
 #endif
 #define IS_POWER_OF_TWO(n) ((n) && !((n) & ((n)-1)))
 
-// This private function returns a capacity at least equal to the given capacity and size+1.
+// This private function returns a capacity at least equal to the given capacity and size.
 // Additionally, the capacity will be a multiple of VECT_CHUNK. If said capacity is greater
 // than the maximum size of a memory block (on 32-bit systems) the program will exit.
 #define vect_sanitize_capacity(T) TEMPLATE(T, vect_sanitize_capacity)
 static inline idxType vect_sanitize_capacity(T)(idxType capacity, idxType size)
 {
-	capacity = ((capacity < size ? size : capacity) + VECT_CHUNK) & ~(VECT_CHUNK-1);
+	capacity = ((capacity < size ? size : capacity) + VECT_CHUNK-1) & ~(VECT_CHUNK-1);
 	assert(((size_t) capacity) == capacity && "Max block size reached on a 32-bit system.");
 	return capacity;
 }
@@ -78,7 +78,7 @@ void vect_setCapacity(T)(Vect(T) *vect, idxType newCapacity)
 void vect_add(T)(Vect(T) *vect, const T value)
 {
 	if (unlikely(vect->size >= vect->capacity))
-		vect_setCapacity(T)(vect, (idxType) (vect->capacity * VECT_GROWTH_FACTOR));
+		vect_setCapacity(T)(vect, (idxType) (vect->capacity * VECT_GROWTH_FACTOR) + 1);
 	vect->array[vect->size++] = value;
 }
 

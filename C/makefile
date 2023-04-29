@@ -17,7 +17,7 @@ OBJ_DIR = obj
 # To generate assembly along with the executable in the OBJ_DIR directory.
 GENERATE_ASM = -save-temps=$(OBJ_DIR)
 
-# For better performance:
+# For enabling SSE/AVX instructions sets:
 PROCESSOR_ARCH = -march=native
 
 # Multithreading API:
