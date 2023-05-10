@@ -23,12 +23,11 @@
 //
 // Parameters
 // ----------
-// The VECT_GROWTH_FACTOR, VECT_INIT_CAPACITY and VECT_CHUNK parameters can be changed
-// from their default values from outside the library, and so for each type instantiation.
-// To do so simply redefine them with a chosen value before including the Vectors.h header.
-// See below for their purpose. Additionally, further functions can be made available for
-// a given type if the macro T_EQUALITY is defined (again before this header inclusion).
-// This macro must encode the equality relationship between 2 elements of that type.
+// Some macro parameters (see below for their purpose) can be changed from their default values
+// from outside the library, and so for each type instantiation. To do so simply redefine them
+// with a chosen value before including the Vectors.h header. Additionally, further functions can
+// be made available for a given type if the macro T_EQUALITY is defined (again before this header
+// inclusion). This macro must encode the equality relationship between 2 elements of that type.
 //
 // Guarantees
 // ----------
@@ -54,6 +53,14 @@
 
 // Parameters - those can be changed from outside for each instantiation.
 
+// VECT_SHRINK_CAPACITY: when set to 1, the allocated memory can shrink upon element removal.
+// Disabling this with a value of 0 may yield speed gains, despite an increased memory usage.
+// In that case, one can manually shrink the excess memory of a vector v without removing
+// its elements by calling: vect_setCapacity(T)(v, 0);
+#ifndef VECT_SHRINK_CAPACITY
+#define VECT_SHRINK_CAPACITY 1
+#endif
+
 // VECT_GROWTH_FACTOR: used for resizing the array. It must be > 1,
 // and can either be an integer (typically 2) or a floating point value.
 #ifndef VECT_GROWTH_FACTOR
@@ -75,7 +82,7 @@
 #ifdef VECT_VERSION
 #undef VECT_VERSION
 #endif
-#define VECT_VERSION 1.1
+#define VECT_VERSION 1.2
 
 #ifdef T
 
@@ -129,8 +136,8 @@ inline Vect(T)* vect_createEmpty(T)(void)
 #define vect_destroy(T) TEMPLATE(T, vect_destroy)
 void vect_destroy(T)(Vect(T) **vect);
 
-// Sets the capacity of the vector to a value at least equal to the desired one.
-// Be mindful not to overuse this function, it may hinder the program performance.
+// Sets the capacity of the vector to a value at least equal to the desired one and the actual
+// vector size. Be mindful not to overuse this function, it may hinder the program performance.
 #define vect_setCapacity(T) TEMPLATE(T, vect_setCapacity)
 void vect_setCapacity(T)(Vect(T) *vect, idxType newCapacity);
 

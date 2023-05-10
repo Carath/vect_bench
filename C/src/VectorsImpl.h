@@ -62,8 +62,8 @@ void vect_destroy(T)(Vect(T) **vect)
 	}
 }
 
-// Sets the capacity of the vector to a value at least equal to the desired one.
-// Be mindful not to overuse this function, it may hinder the program performance.
+// Sets the capacity of the vector to a value at least equal to the desired one and the actual
+// vector size. Be mindful not to overuse this function, it may hinder the program performance.
 void vect_setCapacity(T)(Vect(T) *vect, idxType newCapacity)
 {
 	newCapacity = vect_sanitize_capacity(T)(newCapacity, vect->size);
@@ -87,7 +87,8 @@ void vect_add(T)(Vect(T) *vect, const T value)
 void vect_remove(T)(Vect(T) *vect)
 {
 	if (likely(vect->size > 0)) {
-		if (unlikely(vect->size * (VECT_GROWTH_FACTOR * VECT_GROWTH_FACTOR) < vect->capacity))
+		if (VECT_SHRINK_CAPACITY &&
+			unlikely(vect->size * (VECT_GROWTH_FACTOR * VECT_GROWTH_FACTOR) < vect->capacity))
 			vect_setCapacity(T)(vect, (idxType) (vect->capacity / VECT_GROWTH_FACTOR));
 		--vect->size;
 	}

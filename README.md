@@ -13,10 +13,10 @@ Full benchmark results (char, int and 16-byte struct vectors):
 
 | Language                 | Time       | Max RAM   | Comment                                                 |
 | :----------------------- | :--------: | :-------: | :------------------------------------------------------ |
-| C (clang 10.0.0)         | 1.309 s    | 1.6 GB    | Homemade vectors and generics (v1.1).                   |
+| C (clang 10.0.0)         | 1.309 s    | 1.6 GB    | Homemade vectors and generics (v1.2).                   |
 | Rust (release + asm)     | 1.328 s    | 1.6 GB    | Assembly is only emitted along with the target.         |
 | Rust (release)           | 1.528 s    | 1.6 GB    |                                                         |
-| C (gcc 9.4.0)            | 2.104 s    | 1.6 GB    | Homemade vectors and generics (v1.1).                   |
+| C (gcc 9.4.0)            | 2.104 s    | 1.6 GB    | Homemade vectors and generics (v1.2).                   |
 | cpp (clang++ 10.0.0)     | 2.665 s    | 2.1 GB    |                                                         |
 | cpp (g++ 9.4.0)          | 3.000 s    | 2.1 GB    |                                                         |
 | go                       | 3.489 s    | 7.6 GB    | PGO didn't bring any noticeable improvement.            |
