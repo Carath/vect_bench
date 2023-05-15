@@ -13,12 +13,12 @@ Full benchmark results (char, int and 16-byte struct vectors):
 
 | Language                 | Time       | Max RAM   | Comment                                                 |
 | :----------------------- | :--------: | :-------: | :------------------------------------------------------ |
-| C (clang 10.0.0)         | 1.309 s    | 1.6 GB    | Homemade vectors and generics (v1.2).                   |
-| Rust (release + asm)     | 1.328 s    | 1.6 GB    | Assembly is only emitted along with the target.         |
-| Rust (release)           | 1.528 s    | 1.6 GB    |                                                         |
-| C (gcc 9.4.0)            | 2.104 s    | 1.6 GB    | Homemade vectors and generics (v1.2).                   |
-| cpp (clang++ 10.0.0)     | 2.665 s    | 2.1 GB    |                                                         |
-| cpp (g++ 9.4.0)          | 3.000 s    | 2.1 GB    |                                                         |
+| Rust (release + asm)     | 1.352 s    | 1.6 GB    | Assembly is only emitted along with the target.         |
+| C (clang 10.0.0)         | 1.386 s    | 1.6 GB    | Homemade vectors and generics (v1.2).                   |
+| Rust (release)           | 1.548 s    | 1.6 GB    |                                                         |
+| C (gcc 9.4.0)            | 2.170 s    | 1.6 GB    | Homemade vectors and generics (v1.2).                   |
+| cpp (clang++ 10.0.0)     | 2.675 s    | 2.1 GB    |                                                         |
+| cpp (g++ 9.4.0)          | 2.995 s    | 2.1 GB    |                                                         |
 | go                       | 3.489 s    | 7.6 GB    | PGO didn't bring any noticeable improvement.            |
 | Ada                      | 4.076 s    | 2.1 GB    |                                                         |
 | Nim (arc GC)             | 7.077 s    | 6.4 GB    |                                                         |
@@ -44,9 +44,10 @@ Partial benchmark results (only char and int vectors):
 
 Notes:
 - Reported RAM values are the maximum RAM peak found across several runs.
-- Most measurements here have been done using the provided ``` benchmark.sh ``` script. Run ``` sh benchmark.sh -help ``` to see details about its usage, options and features. A basic use here would be ``` sh benchmark.sh C/test.exe ```
+- Most measurements here have been done using the provided ``` benchmark.sh ``` script. To see details about its usage, options and features simply run ``` sh benchmark.sh -help ```. A basic use on the C benchmark would be ``` sh benchmark.sh C/test.exe ```
 - If one so desire to not use the previous script, the ``` time ``` command available on Linux systems can be used for time measurements. To measure the RAM usage, use ``` /bin/time -v ``` instead.
 - Results shown above come from tests done on an Intel i5-7300HQ 2.50GHz CPU, on Ubuntu 20.04.
+- The number of values added to the vectors are read from file for the C, cpp and Rust benchmarks, in hope to prevent unwanted compiler optimizations.
 
 
 ## Installation

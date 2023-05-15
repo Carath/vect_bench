@@ -19,7 +19,9 @@
 //
 // Note that what precedes does not instantiate the actual implementation, doing so requires
 // to define the VECT_IMPL symbol before the header inclusion in a chosen source file.
-// Note that this must be done only *once* per vector type instantiation globally.
+// Be wary that this must be done only *once* per vector type instantiation globally.
+// Finally, if the target type contains a * or a keyword like const, unsigned, struct, union,
+// enum... then it has to be wrapped in a typedef for this to work.
 //
 // Parameters
 // ----------

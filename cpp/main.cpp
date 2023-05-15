@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <fstream>
+#include <stdlib.h>
 #include <stdint.h>
 
 using namespace std;
@@ -41,7 +43,20 @@ int main(int argc, char const *argv[])
 {
 	// int n = 10;
 	int n = 100'000'000;
-	cout << "Samples: " << n << endl;
+
+	// Preventing unwanted compiler optimizations by reading 'n' from file:
+	const char path[] = "../samplesNumber.txt";
+	std::ifstream file(path);
+	if (!file) {
+		cout << "File not found: " << path << endl;
+		exit(EXIT_FAILURE);
+	}
+	if (!(file >> n)) {
+		cout << "Could not read samples number..." << endl;
+		exit(EXIT_FAILURE);
+	}
+
+	cout << "Samples number: " << n << endl;
 
 	bench<uint8_t>(n,
 		[](int x)     -> uint8_t { return (uint8_t) x; },

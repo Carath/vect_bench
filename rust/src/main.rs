@@ -1,4 +1,5 @@
 use std::mem::size_of_val;
+use std::fs;
 
 // #[repr(C, packed(4))]
 struct PQnode {
@@ -8,7 +9,14 @@ struct PQnode {
 
 fn main() {
 	// let n : u32 = 10;
-	let n : u32 = 100_000_000;
+	// let n : u32 = 100_000_000;
+
+	// Preventing unwanted compiler optimizations by reading 'n' from file:
+	const PATH : &str = "../samplesNumber.txt";
+	let contents = fs::read_to_string(PATH).expect("File not found.");
+	let n = contents.trim().parse::<u32>().unwrap();
+
+	println!("Bench with {} samples...\n", n);
 
 	bench(n, |x| x as u8 , |x| *x as u64);
 	bench(n, |x| x as u32, |x| *x as u64);
@@ -18,8 +26,6 @@ fn main() {
 
 // #[inline(never)]
 fn bench<T>(n: u32, create_t: fn(u32) -> T, hash_t: fn(&T) -> u64) -> u64 {
-	println!("\nBench with {} samples...", n);
-
 	let mut vec = Vec::new();
 
 	for i in 0..n {
@@ -35,7 +41,7 @@ fn bench<T>(n: u32, create_t: fn(u32) -> T, hash_t: fn(&T) -> u64) -> u64 {
 	for x in &vec {
 		checksum += hash_t(x);
 	}
-	println!("Checksum: {}", checksum);
+	println!("Checksum: {}\n", checksum);
 
 	while !vec.is_empty() {
 		vec.pop();

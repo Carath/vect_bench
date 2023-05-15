@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 // Adding the actual implementation for the 3 vector instanciations in this source file:
 #define VECT_IMPL // only define this once per type instanciation!
@@ -8,6 +9,20 @@ int main(int argc, char const *argv[])
 {
 	// int n = 10;
 	int n = 100000000;
+
+	// Preventing unwanted compiler optimizations by reading 'n' from file:
+	const char path[] = "../samplesNumber.txt";
+	FILE *file = fopen(path, "r");
+	if (!file) {
+		printf("File not found: '%s'\n", path);
+		exit(EXIT_FAILURE);
+	}
+	if (fscanf(file, "%d", &n) != 1) {
+		printf("Could not read samples number...\n");
+		exit(EXIT_FAILURE);
+	}
+	fclose(file);
+
 	printf("-> Samples number: %d\n\n", n);
 
 	//////////////////////////////////////////////////
