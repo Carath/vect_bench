@@ -3,9 +3,17 @@
 
 ## Installation
 
-Installation: see <https://openjdk.org/install/>
+To install OpenJDK 17 on Ubuntu, use:
 
-Used openjdk version: ``` 1.8.0_352 ```
+```sh
+sudo apt-get install openjdk-17-jdk
+```
+
+For other OS, see: <https://openjdk.org/install/>
+
+To see the installed Java version, run: ``` java -version ```
+
+Tested versions here: ``` 1.8.0_352 ``` and ``` 17.0.7 2023-04-18 ```.
 
 
 ## Usage

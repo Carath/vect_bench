@@ -4,7 +4,7 @@ def bench(n, createT, hashT):
 		vec.append(createT(i))
 	print("Size:", len(vec))
 	checksum = 0
-	for i in range(n):
+	for i in range(len(vec)):
 		checksum += hashT(vec[i])
 	print("Checksum:", checksum)
 	while len(vec) > 0:

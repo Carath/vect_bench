@@ -24,10 +24,16 @@ Full benchmark results (char, int and 16-byte struct vectors):
 | Nim (arc GC)             | 7.077 s    | 6.4 GB    |                                                         |
 | v (prod)                 | 7.630 s    | 4.9 GB    | Compiling is very slow in production mode.              |
 | Nim (default GC)         | 9.845 s    | 7.6 GB    |                                                         |
+| Java 17 (w/o generics)   | 13.26 s    | 5.5 GB    | OpenJDK implementation                                  |
+| Java 17 (w/ lambdas)     | 13.71 s    | 5.5 GB    | OpenJDK implementation                                  |
+| Java 17 (w/ OOP)         | 15.60 s    | 7.5 GB    | OpenJDK implementation                                  |
 | v                        | 20.20 s    | 5.4 GB    |                                                         |
-| Java 8 (w/o generics)    | 57.67 s    | 6.2 GB    |                                                         |
-| Java 8 (w/ lambdas)      | 1m 13 s    | 6.6 GB    |                                                         |
-| Java 8 (w/ OOP)          | 1m 27 s    | 8.8 GB    |                                                         |
+| OCaml (native)           | 23.78 s    | 5.9 GB    |                                                         |
+| OCaml (bytecode)         | 52.71 s    | 5.9 GB    |                                                         |
+| OCaml (toplevel)         | 54.76 s    | 5.9 GB    |                                                         |
+| Java 8 (w/o generics)    | 57.67 s    | 6.2 GB    | OpenJDK implementation                                  |
+| Java 8 (w/ lambdas)      | 1m 13 s    | 6.6 GB    | OpenJDK implementation                                  |
+| Java 8 (w/ OOP)          | 1m 27 s    | 8.8 GB    | OpenJDK implementation                                  |
 | js (Firefox 109.0)       | (29.93 s)  | -         | Crash with "out of memory"                              |
 | js (node v18)            | (53.48 s)  | 6.2 GB    | Crash with "JavaScript heap out of memory"              |
 | js (node v12)            | (1m 57 s)  | 3.8 GB    | Crash with "JavaScript heap out of memory"              |
@@ -46,7 +52,7 @@ Notes:
 - Reported RAM values are the maximum RAM peak found across several runs.
 - Most measurements here have been done using the provided ``` benchmark.sh ``` script. To see details about its usage, options and features simply run ``` sh benchmark.sh -help ```. A basic use on the C benchmark would be, from the ``` C ``` directory: ``` sh ../benchmark.sh test.exe ```
 - If one so desire to not use the previous script, the ``` time ``` command available on Linux systems can be used for time measurements. To measure the RAM usage, use ``` /bin/time -v ``` instead.
-- Results shown above come from tests done on an Intel i5-7300HQ 2.50GHz CPU, on Ubuntu 20.04.
+- Results shown above come from tests done on a 64-bit system, specifically on an Intel i5-7300HQ 2.50GHz CPU, on Ubuntu 20.04.
 - The number of values added to the vectors are read from file for the C, cpp and Rust benchmarks, in hope to prevent unwanted compiler optimizations.
 
 
@@ -60,7 +66,7 @@ Simply run on an Ubuntu system: ``` sudo sh install.sh ``` and *voilà*.
 
 ### Using Docker
 
-The benchmarking environment can easily be deployed on any system with Docker installed. The resulting image should build in approximately 7 minutes, and should weight around 3.5 GB.
+The benchmarking environment can easily be deployed on any system with Docker installed. The resulting image should build in approximately 8 minutes, and should weight around 4 GB.
 
 Notes:
 - The commands below may need to be run with root privilege.

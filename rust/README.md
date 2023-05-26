@@ -28,7 +28,7 @@ rustc --print target-list
 
 To update both rustc and cargo, simply use:
 
-```
+```sh
 rustup update
 ```
 

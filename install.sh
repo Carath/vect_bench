@@ -31,8 +31,11 @@ rm -rf /usr/local/go && tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz
 rm go$GO_VERSION.linux-amd64.tar.gz
 echo 'export PATH="${PATH}:/usr/local/go/bin"' >> ~/.bashrc
 
-# Java 8:
-apt-get -y install openjdk-8-jdk
+# # Java 8:
+# apt-get -y install openjdk-8-jdk
+
+# Java 17:
+apt-get -y install openjdk-17-jdk
 
 # Node via nvm:
 NVM_VERSION=0.39.3
@@ -46,6 +49,9 @@ nvm install v18.14.2
 curl https://nim-lang.org/choosenim/init.sh > nim_init.sh && sh nim_init.sh -y
 rm -rf $(ls -d /tmp/choosenim-*) # cleanups
 echo 'export PATH="${PATH}:${HOME}/.nimble/bin"' >> ~/.bashrc
+
+# OCaml:
+apt-get -y install ocaml
 
 # Python 3:
 apt-get -y install python3-pip
