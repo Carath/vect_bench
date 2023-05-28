@@ -8,6 +8,7 @@
 - <https://doc.rust-lang.org/reference/introduction.html>
 - <https://doc.rust-lang.org/book/title-page.html>
 - <https://doc.rust-lang.org/1.9.0/book/README.html>
+- <https://doc.rust-lang.org/stable/cargo/index.html>
 
 
 ## Installation
@@ -49,13 +50,13 @@ Creating a project:
 cargo new rust
 ```
 
-Building the project:
+Building the project in debug mode, the executable being created in ``` target/debug/ ```:
 
 ```sh
 cargo build
 ```
 
-Note that executables will be created in ``` target/release/ ```. Also, by default the code isn't optimized. To change that, use instead:
+To enable optimizations, use instead the command below. The executable will be in ``` target/release/ ```:
 
 ```sh
 cargo build --release
