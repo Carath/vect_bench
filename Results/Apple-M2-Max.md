@@ -8,7 +8,7 @@ Tests done on an Apple M2 Max @ 3.50 GHz, on Mac OS.
 | Language                 | Time       | Max RAM   | Comment                                                 |
 | :----------------------- | :--------: | :-------: | :------------------------------------------------------ |
 | Rust (release)           | 0.41 s     |           |                                                         |
-| C (clang 14.0.3)         | 0.43 s     |           | Homemade vectors and generics (v1.2).                   |
+| C (clang 14.0.3)         | 0.43 s     |           | Homemade vectors and generics (v1.0).                   |
 | C++ (clang++ 14.0.3)     | 0.47 s     |           |                                                         |
 | Swift (release)          | 0.701 s    |           | Runtime checks disabled.                                |
 | Swift (release)          | 0.788 s    |           |                                                         |
