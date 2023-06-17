@@ -11,6 +11,7 @@ Additionally, different types of elements are used to fill the vectors (element 
 
 - [Intel i5-7300HQ results](Results/Intel-i5-7300HQ.md)
 - [Intel i7-10750H results](Results/Intel-i7-10750H.md)
+- [Intel i9-10910 results](Results/Intel-i9-10910.md)
 - [Apple M2 Max results](Results/Apple-M2-Max.md)
 - [Apple M1 results](Results/Apple-M1.md)
 
