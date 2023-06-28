@@ -9,10 +9,10 @@ Note: only average times are reported here, since they do match with median time
 
 | Language                 | Time       | Max RAM   | Comment                                                 |
 | :----------------------- | :--------: | :-------: | :------------------------------------------------------ |
+| C (clang 10.0.0)         | 1.329 s    | 1.6 GB    | Homemade vectors and generics (v1.2).                   |
 | Rust (release + asm)     | 1.352 s    | 1.6 GB    | Assembly is only emitted along with the target.         |
-| C (clang 10.0.0)         | 1.386 s    | 1.6 GB    | Homemade vectors and generics (v1.2).                   |
 | Rust (release)           | 1.548 s    | 1.6 GB    |                                                         |
-| C (gcc 9.4.0)            | 2.170 s    | 1.6 GB    | Homemade vectors and generics (v1.2).                   |
+| C (gcc 9.4.0)            | 2.094 s    | 1.6 GB    | Homemade vectors and generics (v1.2).                   |
 | C++ (clang++ 10.0.0)     | 2.675 s    | 2.1 GB    |                                                         |
 | C++ (g++ 9.4.0)          | 2.995 s    | 2.1 GB    |                                                         |
 | Swift (release)          | 3.036 s    | 2.1 GB    |                                                         |

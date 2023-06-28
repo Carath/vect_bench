@@ -7,8 +7,8 @@
 
 int main(int argc, char const *argv[])
 {
-	// int n = 10;
-	int n = 100000000;
+	int n = 10;
+	// int n = 100000000;
 
 	// Preventing unwanted compiler optimizations by reading 'n' from file:
 	const char path[] = "../samplesNumber.txt";
@@ -34,10 +34,11 @@ int main(int argc, char const *argv[])
 		vect_add(uint8_t)(v0, (uint8_t) i);
 	}
 
-	printf("Size: %lu\n", vect_size(uint8_t)(v0));
+	const idxType size0 = vect_size(uint8_t)(v0);
+	printf("Size: %lu\n", size0);
 
 	size_t checksum0 = 0;
-	for (int i = 0; i < n; ++i) {
+	for (int i = 0; i < size0; ++i) {
 		checksum0 += (size_t) vect_get(uint8_t)(v0, i);
 	} printf("checksum0: %lu\n\n", checksum0);
 
@@ -56,10 +57,11 @@ int main(int argc, char const *argv[])
 		vect_add(uint32_t)(v1, (uint32_t) i);
 	}
 
-	printf("Size: %lu\n", vect_size(uint32_t)(v1));
+	const idxType size1 = vect_size(uint32_t)(v1);
+	printf("Size: %lu\n", size1);
 
 	size_t checksum1 = 0;
-	for (int i = 0; i < n; ++i) {
+	for (int i = 0; i < size1; ++i) {
 		checksum1 += (size_t) vect_get(uint32_t)(v1, i);
 	} printf("checksum1: %lu\n\n", checksum1);
 
@@ -79,10 +81,11 @@ int main(int argc, char const *argv[])
 		vect_add(PQnode)(v2, node);
 	}
 
-	printf("Size: %lu\n", vect_size(PQnode)(v2));
+	const idxType size2 = vect_size(PQnode)(v2);
+	printf("Size: %lu\n", size2);
 
 	size_t checksum2 = 0;
-	for (int i = 0; i < n; ++i) {
+	for (int i = 0; i < size2; ++i) {
 		PQnode node = vect_get(PQnode)(v2, i);
 		checksum2 += (size_t) node.key + node.item;
 	} printf("checksum2: %lu\n\n", checksum2);

@@ -50,6 +50,7 @@
 //   changing a vector's size or capacity should be done with caution.
 // - There may be a speed penalty when the implementation instantiation is located in
 //   another source file than where it is used. Using LTO (see makefile) may mitigate this.
+// - The functions below (except vect_destroy) must not be given a NULL vector as argument.
 //
 ////////////////////////////////////////////////////////////////////////////////
 

@@ -13,7 +13,7 @@ typedef struct
 } __attribute__ ((packed, aligned(4))) PQnode;
 
 // template<typename T>
-// size_t bench(int n, auto createT, auto hashT) // compile with -fconcepts
+// size_t bench(int n, auto createT, auto hashT) // compile with -fconcepts, only for GCC.
 template<typename T, typename C, typename H>
 size_t bench(int n, C && createT, H && hashT)
 {
@@ -23,10 +23,11 @@ size_t bench(int n, C && createT, H && hashT)
 		vec.push_back(createT(i));
 	}
 
-	cout << "\nSize: " << vec.size() << endl;
+	const int size = vec.size();
+	cout << "\nSize: " << size << endl;
 
 	size_t checksum = 0;
-	for (int i = 0; i < n; ++i) {
+	for (int i = 0; i < size; ++i) {
 		checksum += (size_t) hashT(vec.at(i));
 	}
 	cout << "Checksum: " << checksum << endl;
@@ -41,8 +42,8 @@ size_t bench(int n, C && createT, H && hashT)
 
 int main(int argc, char const *argv[])
 {
-	// int n = 10;
-	int n = 100'000'000;
+	int n = 10;
+	// int n = 100'000'000;
 
 	// Preventing unwanted compiler optimizations by reading 'n' from file:
 	const char path[] = "../samplesNumber.txt";

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Note: this script relies on the /bin/time and bc commands.
+
 help="This script runs several instances of a target to benchmark,
 and outputs statistics on recorded RAM usage and runtimes.
 The target may be an executable file, or a symbolic link
