@@ -15,7 +15,7 @@ typedef struct
 } __attribute__ ((packed, aligned(4))) PQnode;
 
 
-// Exposing the 3 vector instanciations API to each file including this public header:
+// Exposing the 4 vector instanciations API to each file including this public header:
 
 #undef T
 #define T uint8_t
@@ -30,6 +30,11 @@ typedef struct
 #undef T
 #define T PQnode
 // #define T_EQUALITY(a, b) ((a).key == (b).key && (a).item == (b).item)
+#include "Vectors.h"
+
+#undef T
+#define T float
+// #define T_EQUALITY(a, b) ((a) == (b))
 #include "Vectors.h"
 
 #endif // VECT_INST_H

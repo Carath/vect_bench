@@ -1,3 +1,5 @@
+import gc
+
 def bench(n, createT, hashT):
 	vec = []
 	for i in range(n):
@@ -9,6 +11,8 @@ def bench(n, createT, hashT):
 	print("Checksum:", checksum)
 	while len(vec) > 0:
 		vec.pop(len(vec)-1)
+	del vec
+	gc.collect()
 	return checksum
 
 class PQnode:

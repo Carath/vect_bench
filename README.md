@@ -82,3 +82,5 @@ docker-compose down
 Languages to test:
 - [C#](https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu-2004) / [Mono](https://www.mono-project.com/)
 - [Kotlin](https://kotlinlang.org/docs/command-line.html)
+- [Haxe](https://haxe.org/) outputs (in particular the C++ one).
+- [Zig](https://en.wikipedia.org/wiki/Zig_(programming_language)) when the language is more mature.

@@ -1,9 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
+#include <string.h>
 
 // Adding the actual implementation for the 3 vector instanciations in this source file:
 #define VECT_IMPL // only define this once per type instanciation!
 #include "vect_instances.h"
+
+void naive_matrix_multiply(const Vect(float) *A, const Vect(float) *B, Vect(float) *C,
+	int rows_A, int cols_B, int cols_A);
 
 int main(int argc, char const *argv[])
 {
@@ -97,6 +102,66 @@ int main(int argc, char const *argv[])
 	vect_destroy(PQnode)(&v2);
 
 	//////////////////////////////////////////////////
+	// Naive matrix multiply benchmark, to check
+	// on bound checking performance loss:
+
+	// // Results with clang 10.0 :
+	// // Simple bound checks => 6 times slower.
+	// // Complete bound checking => 27% slower than the simpler version.
+
+	// const int m = 2000;
+	// const int totalSize = m * m; // square matrices
+
+	// Vect(float) *A = vect_create(float)(totalSize, totalSize);
+	// Vect(float) *B = vect_create(float)(totalSize, totalSize);
+	// Vect(float) *C = vect_create(float)(totalSize, totalSize);
+
+	// for (int i = 0; i < totalSize; ++i) {
+	// 	vect_set(float)(A, i, i);
+	// }
+
+	// for (int i = 0; i < totalSize; ++i) {
+	// 	vect_set(float)(B, i, i+1);
+	// }
+
+	// naive_matrix_multiply(A, B, C, m, m, m);
+
+	// double checksum = 0.;
+	// for (int i = 0; i < totalSize; ++i) {
+	// 	checksum += vect_get(float)(C, i);
+	// } printf("matrix checksum: %.3f\n", checksum);
+
+	// vect_destroy(float)(&C);
+	// vect_destroy(float)(&B);
+	// vect_destroy(float)(&A);
+
+	//////////////////////////////////////////////////
 
 	return 0;
+}
+
+// C <- A x B
+void naive_matrix_multiply(const Vect(float) *A, const Vect(float) *B, Vect(float) *C,
+	int rows_A, int cols_B, int cols_A)
+{
+	assert(A->size >= rows_A * cols_A
+		&& B->size >= cols_A * cols_B
+		&& C->size >= rows_A * cols_B);
+
+	memset(C->array, 0, rows_A * cols_B * sizeof(float));
+
+	for (int i = 0; i < rows_A; ++i)
+	{
+		for (int k = 0; k < cols_A; ++k)
+		{
+			for (int j = 0; j < cols_B; ++j)
+			{
+				// C->array[i * cols_B + j] += A->array[i * cols_A + k] * B->array[k * cols_B + j]; // raw access
+				float value_A = vect_get(float)(A, i * cols_A + k);
+				float value_B = vect_get(float)(B, k * cols_B + j);
+				float value_C = vect_get(float)(C, i * cols_B + j);
+				vect_set(float)(C, i * cols_B + j, value_C + value_A * value_B);
+			}
+		}
+	}
 }

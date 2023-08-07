@@ -66,6 +66,7 @@ void vect_destroy(T)(Vect(T) **vect)
 // vector size. Be mindful not to overuse this function, it may hinder the program performance.
 void vect_setCapacity(T)(Vect(T) *vect, idxType newCapacity)
 {
+	NULL_CHECK(vect);
 	newCapacity = vect_sanitize_capacity(T)(newCapacity, vect->size);
 	if (likely(newCapacity != vect->capacity)) {
 		vect->capacity = newCapacity;
@@ -77,6 +78,7 @@ void vect_setCapacity(T)(Vect(T) *vect, idxType newCapacity)
 // Adds the given element at the end of the vector.
 void vect_add(T)(Vect(T) *vect, const T value)
 {
+	NULL_CHECK(vect);
 	if (unlikely(vect->size >= vect->capacity))
 		vect_setCapacity(T)(vect, (idxType) (vect->capacity * VECT_GROWTH_FACTOR) + 1);
 	vect->array[vect->size++] = value;
@@ -86,18 +88,21 @@ void vect_add(T)(Vect(T) *vect, const T value)
 // Note: use vect_get() to get said value before deleting it.
 void vect_remove(T)(Vect(T) *vect)
 {
+	NULL_CHECK(vect);
 	if (likely(vect->size > 0)) {
+		--vect->size;
 		if (VECT_SHRINK_CAPACITY &&
 			unlikely(vect->size * (VECT_GROWTH_FACTOR * VECT_GROWTH_FACTOR) < vect->capacity))
 			vect_setCapacity(T)(vect, (idxType) (vect->capacity / VECT_GROWTH_FACTOR));
-		--vect->size;
 	}
 }
 
 // Creates a vector from a plain array, which is copied.
-// Careful, the given array size must be correct.
+// Careful, the given array must not be NULL and its size
+// needs to be at least equal to the given one.
 Vect(T)* vect_fromArray(T)(const T *array, idxType size)
 {
+	NULL_CHECK(array);
 	Vect(T) *vect = vect_create(T)(size, size);
 	memcpy(vect->array, array, size * sizeof(T));
 	return vect;
@@ -107,6 +112,7 @@ Vect(T)* vect_fromArray(T)(const T *array, idxType size)
 // deep copied. The initial vector capacity is also copied.
 Vect(T)* vect_copy(T)(const Vect(T) *vect)
 {
+	NULL_CHECK(vect);
 	Vect(T) *copy = vect_create(T)(vect->capacity, vect->size);
 	memcpy(copy->array, vect->array, vect->size * sizeof(T));
 	return copy;
@@ -115,6 +121,7 @@ Vect(T)* vect_copy(T)(const Vect(T) *vect)
 // Creates a new vector by merging two vectors whose arrays can overlap.
 Vect(T)* vect_merge(T)(const Vect(T) *vect1, const Vect(T) *vect2)
 {
+	NULL_CHECK(vect1 && vect2);
 	Vect(T) *merge = vect_create(T)(vect1->capacity + vect2->capacity, vect1->size + vect2->size);
 	memcpy(merge->array, vect1->array, vect1->size * sizeof(T));
 	memcpy(merge->array + vect1->size, vect2->array, vect2->size * sizeof(T));
@@ -125,6 +132,7 @@ Vect(T)* vect_merge(T)(const Vect(T) *vect1, const Vect(T) *vect2)
 // verifying a given predicate. Elements order and redundancies are preserved.
 Vect(T)* vect_filter(T)(const Vect(T) *vect, bool (*predicate)(const T))
 {
+	NULL_CHECK(vect && predicate);
 	Vect(T) *newvect = vect_createEmpty(T)();
 	for (idxType i = 0; i < vect->size; ++i) {
 		const T value = vect->array[i];
@@ -141,6 +149,7 @@ Vect(T)* vect_filter(T)(const Vect(T) *vect, bool (*predicate)(const T))
 // If said value is not found, vect->size is returned.
 idxType vect_index(T)(const Vect(T) *vect, const T value)
 {
+	NULL_CHECK(vect);
 	for (idxType i = 0; i < vect->size; ++i) {
 		if (unlikely(vect_T_equality(T)(vect->array[i], value)))
 			return i;

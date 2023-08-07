@@ -3,8 +3,8 @@
 // -----
 // This small library is a C implementation of generic vectors (i.e dynamic arrays)
 // for 32-bit and 64-bit systems. It is designed to be fast, lightweight, and safe:
-// bound checking is done (unless asserts are disabled). Furthermore memory footprint
-// will scale dynamically according to a vector's current number of elements.
+// bounds and NULL checks can be done (unless asserts are disabled). Furthermore memory
+// footprint will scale dynamically according to a vector's current number of elements.
 //
 // Usage
 // -----
@@ -80,12 +80,28 @@
 #define VECT_CHUNK 8
 #endif
 
+// VECT_NULL_CHECKS: when set to 1, enables NULL checks to be done
+// during the runtime, at the cost of a performance penalty.
+#ifndef VECT_NULL_CHECKS
+#define VECT_NULL_CHECKS 0
+#endif
+
+// VECT_BOUND_CHECKS: used to enable bound checking, at the cost of a performance
+// loss which can either be mild or large depending on the use case. Options:
+// 0 -> No bound checks are done: raw access.
+// 1 -> Simple bound checks are enabled. Can be several times slower in some cases.
+// 2 -> Bound checking with index data. Slightly slower than the simpler version, needs stdio.
+#ifndef VECT_BOUND_CHECKS
+#define VECT_BOUND_CHECKS 1
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////
+// Version and setup:
 
 #ifdef VECT_VERSION
 #undef VECT_VERSION
 #endif
-#define VECT_VERSION 1.2
+#define VECT_VERSION 1.3
 
 #ifdef T
 
@@ -97,6 +113,12 @@ extern "C" {
 #include <stdbool.h>
 #include <assert.h>
 
+#ifdef idxType
+#undef idxType
+#endif
+#define idxType uint64_t // needed to prevent overflows
+
+
 #ifdef CAT
 #undef CAT
 #endif
@@ -107,10 +129,30 @@ extern "C" {
 #endif
 #define TEMPLATE(X,Y) CAT(Y, X)
 
-#ifdef idxType
-#undef idxType
+
+#ifdef NULL_CHECK
+#undef NULL_CHECK
 #endif
-#define idxType uint64_t // needed to prevent overflows
+#define NULL_CHECK(cond) \
+	assert((!VECT_NULL_CHECKS || (cond)) && "NULL pointer given.")
+
+
+#ifdef BOUND_CHECK
+#undef BOUND_CHECK
+#endif
+#if VECT_BOUND_CHECKS == 0
+	#define BOUND_CHECK(vect, i) {}
+#elif VECT_BOUND_CHECKS == 1
+	#define BOUND_CHECK(vect, i) \
+		assert(((i) < (vect)->size) && "Out of bound error.");
+#else
+	#include <stdio.h>
+	#define BOUND_CHECK(vect, i) \
+		if ((i) >= (vect)->size) { \
+			printf("Out of bound error with vector size %lu at index %lu !\n", (vect)->size, (i)); \
+			exit(EXIT_FAILURE); \
+		}
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -149,6 +191,7 @@ void vect_setCapacity(T)(Vect(T) *vect, idxType newCapacity);
 #define vect_clear(T) TEMPLATE(T, vect_clear)
 inline void vect_clear(T)(Vect(T) *vect)
 {
+	NULL_CHECK(vect);
 	vect->size = 0;
 }
 
@@ -156,6 +199,7 @@ inline void vect_clear(T)(Vect(T) *vect)
 #define vect_isEmpty(T) TEMPLATE(T, vect_isEmpty)
 inline bool vect_isEmpty(T)(const Vect(T) *vect)
 {
+	NULL_CHECK(vect);
 	return vect->size == 0;
 }
 
@@ -163,6 +207,7 @@ inline bool vect_isEmpty(T)(const Vect(T) *vect)
 #define vect_size(T) TEMPLATE(T, vect_size)
 inline idxType vect_size(T)(const Vect(T) *vect)
 {
+	NULL_CHECK(vect);
 	return vect->size;
 }
 
@@ -170,22 +215,25 @@ inline idxType vect_size(T)(const Vect(T) *vect)
 #define vect_capacity(T) TEMPLATE(T, vect_capacity)
 inline idxType vect_capacity(T)(const Vect(T) *vect)
 {
+	NULL_CHECK(vect);
 	return vect->capacity;
 }
 
-// Returns the element at index i. Does bound checking.
+// Returns the element at index i. Does bound checking by default.
 #define vect_get(T) TEMPLATE(T, vect_get)
 inline T vect_get(T)(const Vect(T) *vect, idxType i)
 {
-	assert(i < vect->size && "Out of bound error in vect_get()");
+	NULL_CHECK(vect);
+	BOUND_CHECK(vect, i);
 	return vect->array[i];
 }
 
-// Sets the element at index i with the given value. Does bound checking.
+// Sets the element at index i with the given value. Does bound checking by default.
 #define vect_set(T) TEMPLATE(T, vect_set)
 inline void vect_set(T)(Vect(T) *vect, idxType i, const T value)
 {
-	assert(i < vect->size && "Out of bound error in vect_set()");
+	NULL_CHECK(vect);
+	BOUND_CHECK(vect, i);
 	vect->array[i] = value;
 }
 
@@ -199,7 +247,8 @@ void vect_add(T)(Vect(T) *vect, const T value);
 void vect_remove(T)(Vect(T) *vect);
 
 // Creates a vector from a plain array, which is copied.
-// Careful, the given array size must be correct.
+// Careful, the given array must not be NULL and its size
+// needs to be at least equal to the given one.
 #define vect_fromArray(T) TEMPLATE(T, vect_fromArray)
 Vect(T)* vect_fromArray(T)(const T *array, idxType size);
 
@@ -246,13 +295,16 @@ inline bool vect_isIn(T)(const Vect(T) *vect, const T value)
 
 #include "VectorsImpl.h" // the implementation.
 
-#ifdef T_EQUALITY
-#undef T_EQUALITY // to prevent leaking T_EQUALITY to another instantiation.
-#endif // T_EQUALITY
+#undef BOUND_CHECK
+#undef NULL_CHECK
 
 #if __cplusplus
 }
 #endif
+
+#ifdef T_EQUALITY
+#undef T_EQUALITY // to prevent leaking T_EQUALITY to another instantiation.
+#endif // T_EQUALITY
 
 #undef T // to prevent leaking T to another instantiation.
 #endif // T

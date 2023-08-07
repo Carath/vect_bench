@@ -9,10 +9,10 @@ Note: only average times are reported here, since they do match with median time
 
 | Language                 | Time       | Max RAM   | Comment                                                 |
 | :----------------------- | :--------: | :-------: | :------------------------------------------------------ |
-| C (clang 10.0.0)         | 1.329 s    | 1.6 GB    | Homemade vectors and generics (v1.2).                   |
+| C (clang 10.0.0)         | 1.297 s    | 1.6 GB    | Homemade vectors and generics (v1.3).                   |
 | Rust (release + asm)     | 1.352 s    | 1.6 GB    | Assembly is only emitted along with the target.         |
 | Rust (release)           | 1.548 s    | 1.6 GB    |                                                         |
-| C (gcc 9.4.0)            | 2.094 s    | 1.6 GB    | Homemade vectors and generics (v1.2).                   |
+| C (gcc 9.4.0)            | 2.094 s    | 1.6 GB    | Homemade vectors and generics (v1.3).                   |
 | C++ (clang++ 10.0.0)     | 2.675 s    | 2.1 GB    |                                                         |
 | C++ (g++ 9.4.0)          | 2.995 s    | 2.1 GB    |                                                         |
 | Swift (release)          | 3.036 s    | 2.1 GB    |                                                         |
@@ -34,7 +34,21 @@ Note: only average times are reported here, since they do match with median time
 | js (Firefox 109.0)       | (29.93 s)  | -         | Crash with "out of memory"                              |
 | js (node v18)            | (53.48 s)  | 6.2 GB    | Crash with "JavaScript heap out of memory"              |
 | js (node v12)            | (1m 57 s)  | 3.8 GB    | Crash with "JavaScript heap out of memory"              |
-| Python 3                 | (2m 39 s)  | 15 GB     | Crash with "Killed" (swap used)                         |
+| Python 3                 | (2m 39 s)  | 18.5 GB   | Crash with "Killed" (swap used)                         |
+
+
+#### Full benchmark results inside a Docker container
+
+| Language                 | Time       | Max RAM   | Time comparison with native benchmark                   |
+| :----------------------- | :--------: | :-------: | :------------------------------------------------------ |
+| C (clang 10.0.0)         | 1.314 s    | 1.6 GB    | + 1.31 %                                                |
+| Rust (release + asm)     | 1.316 s    | 1.6 GB    | - 2.70 %                                                |
+| Rust (release)           | 1.828 s    | 1.6 GB    | + 18.1 %                                                |
+| C++ (clang++ 10.0.0)     | 2.709 s    | 2.1 GB    | + 1.28 %                                                |
+| C (gcc 9.4.0)            | 2.924 s    | 1.6 GB    | + 39.6 %                                                |
+| C++ (g++ 9.4.0)          | 3.102 s    | 2.1 GB    | + 3.57 %                                                |
+
+Note that each executable has been recompiled inside the container.
 
 
 #### Partial benchmark results (only char and int vectors):
