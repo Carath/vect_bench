@@ -18,7 +18,7 @@ Additionally, different types of elements are used to fill the vectors (element 
 Notes:
 - Reported times are the average runtimes obtained from several runs, the median times may also be given if they differ substantially. RAM values are the maximum RAM peak found across those several runs.
 - Most measurements here have been done using the provided ``` benchmark.sh ``` script. To see details about its usage, options and features simply run ``` sh benchmark.sh -help ```. A basic use on the C benchmark would be, from the ``` c ``` directory: ``` sh ../benchmark.sh test.exe ```
-- If one so desire to not use the previous script, the ``` time ``` command available on Linux systems can be used for time measurements. To measure the RAM usage, use ``` /bin/time -v ``` instead.
+- If one so desire to not use the previous script, the ``` time ``` command available on Linux systems can be used for time measurements. To measure the RAM usage, use ``` /bin/time -v ``` or ``` /usr/bin/time -v ``` instead.
 - Results shown above come from tests done only on 64-bit systems, so far.
 - The number of values added to the vectors are read from file for the C, C++ and Rust benchmarks, in hope to prevent unwanted compiler optimizations.
 
@@ -84,3 +84,6 @@ Languages to test:
 - [Kotlin](https://kotlinlang.org/docs/command-line.html)
 - [Haxe](https://haxe.org/) outputs (in particular the C++ one).
 - [Zig](https://en.wikipedia.org/wiki/Zig_(programming_language)) when the language is more mature.
+- Try languages from the Lisp family (Scheme, Clojure, ...) and the Lua language.
+- C implementation: support other memory allocators, and add a proper containerized benchmark framework to test the code against several versions of gcc and clang. See [this](https://hub.docker.com/_/gcc) and [this](https://hub.docker.com/r/kunitoki). Also, add a mechanism to instanciate a same type implementation several time ?
+- ``` benchmark.sh ```: raise verbosity upon run failure!

@@ -92,13 +92,15 @@ if [ ! -z $ref ] && [ $(echo "$ref <= 0" | bc -l) -eq 1 ]; then
 	echo "Reference value ($ref) must be > 0"; exit 1
 fi
 
+timeCommand=$(which time)
+echo "Found time command: $timeCommand"
 smallhash=$(md5sum $targetPath | cut -c 1-10)
 printf "Launching %d run(s) of: %s\nTarget md5sum: %s...\n\n" $runs "$target" $smallhash
 maxRAM=0; totalTime=0; sumSquares=0; successes=0; times=""
 for i in $(seq 1 $runs); do
 	# Note: using target instead of targetPath here, in order to use its args.
 	start=$(date +%s.%N)
-	output=`(/bin/time -f "RAM: %M" $target) 2>&1`; exitCode=$?
+	output=`($timeCommand -f "RAM: %M" $target) 2>&1`; exitCode=$?
 	end=$(date +%s.%N)
 	runtime=$(echo "$end - $start" | bc -l)
 	RAM=$(echo "$output" | awk '/RAM/{print $NF}')
