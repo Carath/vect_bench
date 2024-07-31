@@ -83,7 +83,11 @@ Languages to test:
 - [C#](https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu-2004) / [Mono](https://www.mono-project.com/)
 - [Kotlin](https://kotlinlang.org/docs/command-line.html)
 - [Haxe](https://haxe.org/) outputs (in particular the C++ one).
+- [Scala](https://www.scala-lang.org/)
+- [Erlang](https://www.erlang.org/) and [Elixir](https://elixir-lang.org/)
+- [Ruby](https://www.ruby-lang.org/en/)
+- [Fortran](https://fortran-lang.org/)
 - [Zig](https://en.wikipedia.org/wiki/Zig_(programming_language)) when the language is more mature.
-- Try languages from the Lisp family (Scheme, Clojure, ...) and the Lua language.
+- [Lua](https://tylerneylon.com/a/learn-lua/)
+- The Lisp family: [Scheme](https://www.scheme.org/), [Clojure](https://clojure.org/), ...
 - C implementation: support other memory allocators, and add a proper containerized benchmark framework to test the code against several versions of gcc and clang. See [this](https://hub.docker.com/_/gcc) and [this](https://hub.docker.com/r/kunitoki). Also, add a mechanism to instanciate a same type implementation several time ?
-- ``` benchmark.sh ```: raise verbosity upon run failure!

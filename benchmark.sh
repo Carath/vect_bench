@@ -113,7 +113,7 @@ for i in $(seq 1 $runs); do
 			maxRAM=$RAM
 		fi
 	fi
-	if [ $verbosity -ge 1 ]; then
+	if [ $verbosity -ge 1 ] || [ $exitCode -ne 0 ]; then
 		echo "$output\n"
 	fi
 	printf "Run %d:\n Exit code: %d\n RAM peak:  %d KB\n Runtime:   %.3f s\n\n" $i $exitCode $RAM $runtime
